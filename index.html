@@ -2,518 +2,483 @@
 <html lang="pt-br" data-bs-theme="light">
 <head>
   <meta charset="utf-8">
-  <title>Kratos System · Hub</title>
+  <title>Kratos System · App Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2747d9">
 
-  <!-- Fontes & Bootstrap Icons -->
+  <!-- iOS PWA -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kratos Hub">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- Fontes & Bootstrap -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
-    :root{
-      --royal:#2747d9;
-      --royal2:#3b61e3;
-      --bg1:#f2f6ff;
-      --bg2:#d2e1ff;
-      --glass: rgba(255,255,255,0.34);
-      --glassBorder: rgba(70,90,255,0.16);
-      --shadow: 0 10px 46px rgba(39,71,217,0.18);
-      --green:#23bb75;
-      --ink:#0b1220;
-      --muted:#5b6478;
-      --danger:#e74c3c;
-
-      /* Altura do “dock” inferior considerando safe-area */
-      --tabH: calc(82px + env(safe-area-inset-bottom, 0px));
-      --radius: 26px;
-
-      /* Espaços padrão */
-      --pad: 12px;
-      --dockGap: 10px;  /* distância do dock às bordas */
+    :root {
+      --royal: #2747d9;
+      --royal-2: #3b61e3;
+      --bg: #f4f7ff;
+      --glass: rgba(255,255,255,0.32);
+      --glass-border: rgba(70,90,255,0.13);
+      --shadow: 0 6px 36px 0 rgba(39,71,217,0.13);
+      --green: #23bb75;
+      --tab-h: 72px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
     }
 
-    *{box-sizing:border-box}
-    html,body{height:100%}
-
-    body{
-      margin:0;
-      min-height:100vh;
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: linear-gradient(120deg, #f2f6ff 0%, #d2e1ff 100%);
       font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      background: radial-gradient(900px 500px at 20% 10%, #ffffff 0%, rgba(255,255,255,0) 60%),
-                  linear-gradient(120deg, var(--bg1) 0%, var(--bg2) 100%);
-      color: var(--ink);
-      overflow:hidden;
+      overflow: hidden; /* sensação de app */
     }
 
-    /* ===== App shell ===== */
-    .app{
-      width:100vw;
-
-      /* viewport estável + moderno */
-      height: 100vh;
-      height: 100dvh;
-
-      display:flex;
-      flex-direction:column;
-      position:relative;
-    }
-
-    /* Top brand bar */
-    .topbar{
-      padding: 14px 14px 10px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex: 0 0 auto;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 0;
-    }
-    .brand img{
-      width:42px;height:42px;border-radius:14px;
-      background:#fff;
-      border:1px solid rgba(255,255,255,0.85);
-      box-shadow: 0 10px 24px rgba(39,71,217,.20);
-      object-fit:contain;
-    }
-    .brand .txt{min-width:0}
-    .brand .title{
-      font-family:'Orbitron',sans-serif;
-      letter-spacing:1.6px;
-      font-size:0.98rem;
-      margin:0;
-      text-transform:uppercase;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .brand .sub{
-      margin:2px 0 0;
-      color: var(--muted);
-      font-size:0.84rem;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .pill{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      padding: 10px 12px;
-      border-radius: 16px;
-      background: rgba(255,255,255,0.55);
-      border: 1.4px solid rgba(70,90,255,0.18);
-      box-shadow: 0 10px 36px rgba(39,71,217,.10);
-      user-select:none;
-      white-space:nowrap;
-      font-size:0.86rem;
-      color:#233;
-      flex: 0 0 auto;
-    }
-    .pill i{color:var(--royal2)}
-
-    /* Main glass container */
-    .stage{
-      margin: 0 var(--pad) var(--pad);
-      flex: 1 1 auto;
-      border-radius: var(--radius);
-      background: var(--glass);
-      border: 1.8px solid var(--glassBorder);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-      position:relative;
-
-      /* Reserva espaço real para o dock inferior + safe-area */
-      padding-bottom: var(--tabH);
-    }
-
-    /* Iframe area */
-    .view{
-      position:absolute;
-      top:0; left:0; right:0;
-
-      /* Nunca deixa o iframe entrar embaixo do dock */
-      bottom: var(--tabH);
-
-      background: rgba(255,255,255,0.26);
-    }
-    iframe{
-      width:100%;
-      height:100%;
-      border:0;
-      display:block;
-      background:#fff;
-    }
-
-    /* Splash overlay */
-    .splash{
-      position:absolute; inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      gap:12px;
-      background: linear-gradient(135deg, rgba(39,71,217,0.92), rgba(59,97,227,0.88));
-      color:#fff;
-      z-index: 6;
-      transition: opacity .35s ease, transform .35s ease;
-    }
-    .splash.hide{opacity:0; transform: scale(1.02); pointer-events:none;}
-    .splash .logo{
-      width:88px;height:88px;border-radius:26px;
-      background:#fff;
-      border: 4px solid rgba(255,255,255,0.92);
-      object-fit:contain;
-      box-shadow: 0 18px 46px rgba(0,0,0,0.18);
-    }
-    .splash .t1{
-      font-family:'Orbitron',sans-serif;
-      letter-spacing:2px;
-      margin:0;
-      text-transform:uppercase;
-      font-size:1.02rem;
-    }
-    .splash .t2{
-      margin:0;
-      opacity:.92;
-      font-size:.92rem;
-    }
-
-    /* Bottom tabs (dock) */
-    .tabs{
-      position:absolute;
-      left: var(--dockGap);
-      right: var(--dockGap);
-
-      /* CORREÇÃO: cola no fundo respeitando safe-area */
-      bottom: calc(var(--dockGap) + env(safe-area-inset-bottom, 0px));
-
-      height: 64px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.58);
-      border: 1.6px solid rgba(70,90,255,0.16);
-      box-shadow: 0 14px 44px rgba(39,71,217,0.18);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding: 10px;
-      z-index: 5;
-      backdrop-filter: blur(18px) saturate(140%);
-      -webkit-backdrop-filter: blur(18px) saturate(140%);
-    }
-
-    .tab{
-      flex:1;
-      height:100%;
-      border-radius: 18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding: 10px 12px;
-      text-decoration:none;
-      border: 0;
-      cursor:pointer;
+    /* APP SHELL */
+    .app-shell{
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      padding-top: var(--safe-top);
       background: transparent;
-      color: #243;
-      transition: transform .12s ease, box-shadow .12s ease, background .12s ease;
-      user-select:none;
-    }
-    .tab .ico{
-      width:38px; height:38px;
-      border-radius: 14px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(39,71,217,0.10);
-      color: var(--royal);
-      font-size: 1.15rem;
-      flex-shrink:0;
-      transition: background .12s ease, color .12s ease;
-    }
-    .tab .lab{
-      display:flex;
-      flex-direction:column;
-      align-items:flex-start;
-      line-height:1.05;
-      min-width:0;
-    }
-    .tab .lab b{
-      font-size:0.86rem;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 100%;
-    }
-    .tab .lab span{
-      font-size:0.74rem;
-      color: var(--muted);
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-      max-width: 100%;
     }
 
-    .tab.active{
-      background: linear-gradient(135deg, rgba(39,71,217,0.92), rgba(59,97,227,0.90));
-      color:#fff;
-      box-shadow: 0 12px 30px rgba(39,71,217,0.34);
+    .app-views{
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      padding-bottom: calc(var(--tab-h) + var(--safe-bottom));
+    }
+
+    .view{
+      position: absolute;
+      inset: 0;
+      display: none;
+      overflow: hidden;
+    }
+    .view.active{ display: block; }
+
+    /* IFRAME (para manter navegação interna sem “sair” do app) */
+    .view iframe{
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #fff;
+    }
+
+    /* TELA HUB (seu card original) */
+    .login-wrap {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 12px;
+      overflow: auto;
+    }
+
+    .glass-card {
+      max-width: 410px;
+      width: 98vw;
+      border-radius: 24px;
+      background: var(--glass);
+      backdrop-filter: blur(22px) saturate(130%);
+      -webkit-backdrop-filter: blur(22px) saturate(130%);
+      border: 1.8px solid var(--glass-border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: 0;
+      position: relative;
+      margin-bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+    }
+
+    .card-top {
+      background: linear-gradient(135deg, var(--royal), var(--royal-2));
+      color: #fff;
+      text-align: center;
+      padding: 38px 24px 30px 24px;
+      border-bottom-left-radius: 50% 26px;
+      border-bottom-right-radius: 50% 26px;
+      position: relative;
+      box-shadow: 0 8px 22px 0 #2747d91b;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 0;
+    }
+
+    .brand-logo {
+      width: 92px;
+      height: 92px;
+      border-radius: 50%;
+      object-fit: contain;
+      border: 4px solid #fff;
+      background: #fff;
+      box-shadow: 0 3px 24px 0 #2747d950;
+      transition: box-shadow 0.2s, transform 0.3s;
+      margin-bottom: 2px;
+    }
+
+    .brand-logo:hover {
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 6px 28px 0 #1d3bb055;
+    }
+
+    .brand-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.23rem;
+      letter-spacing: 2px;
+      font-weight: 600;
+      text-shadow: 0 2px 18px #13246e30;
+      margin-bottom: 0px;
+      text-transform: uppercase;
+    }
+
+    .small-note {
+      font-size: .96rem;
+      color: #e6ecfa;
+      opacity: .91;
+      margin-top: 4px;
+    }
+
+    .credentials-vault {
+      margin: 0 auto;
+      margin-top: 16px;
+      width: 82%;
+      min-height: 54px;
+      background: rgba(255,255,255,0.44);
+      border: 2px solid var(--royal-2);
+      border-radius: 16px;
+      box-shadow: 0 3px 24px 0 #3b61e325;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 10px 16px 10px 14px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .vault-icon {
+      font-size: 1.5rem;
+      color: var(--royal-2);
+      margin-right: 2px;
+      opacity: 0.75;
+    }
+
+    .vault-text {
+      font-size: 1.08rem;
+      color: #234;
+      font-weight: 500;
+      letter-spacing: .01em;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+    }
+
+    .vault-mini {
+      font-size: .92rem;
+      color: #456;
+      opacity: .78;
+      font-weight: 400;
+    }
+
+    .card-body {
+      padding: 30px 28px 22px 28px;
+      background: transparent;
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .role-info {
+      font-size: .99rem;
+      color: var(--green);
+      background: #e8fcf2;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 12px;
+      font-weight: 600;
+      box-shadow: 0 1px 8px #23bb750a;
+      text-align: left;
+    }
+
+    .marca-sistema {
+      color: #1a1a1a;
+      text-align: center;
+      margin: 16px auto 8px auto;
+      font-size: 1.04rem;
+      letter-spacing: 0.01em;
+      font-weight: 500;
+      opacity: 0.96;
+      user-select: none;
+      width: 100%;
+    }
+
+    .hub-links {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .hub-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: none;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.94rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      background: linear-gradient(135deg, var(--royal), var(--royal-2));
+      box-shadow: 0 6px 20px #3b61e333;
+      transform: translateY(0);
+      transition:
+        transform 0.12s ease-out,
+        box-shadow 0.12s ease-out,
+        background 0.12s ease-out;
+    }
+
+    .hub-btn:hover {
       transform: translateY(-1px);
+      background: linear-gradient(135deg, var(--royal-2), var(--royal));
+      box-shadow: 0 10px 26px #2747d955;
+      color: #fff;
     }
-    .tab.active .ico{
-      background: rgba(255,255,255,0.18);
-      color:#fff;
-    }
-    .tab.active .lab span{ color: rgba(255,255,255,0.86); }
 
-    /* Fallback modal */
-    .modalx{
-      position:absolute;
-      inset:0;
-      background: rgba(10,14,30,0.48);
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-      z-index: 7;
+    .hub-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.16);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 1.1rem;
     }
-    .modalx.show{display:flex;}
-    .modalcard{
-      width:min(420px, 98vw);
-      border-radius: 22px;
-      background: rgba(255,255,255,0.88);
-      border: 1.6px solid rgba(70,90,255,0.18);
-      box-shadow: 0 18px 60px rgba(0,0,0,0.22);
-      padding: 16px 14px;
+
+    .hub-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.2;
+      text-align: left;
     }
-    .modalcard h3{
-      margin: 0 0 6px;
-      font-family:'Orbitron',sans-serif;
-      letter-spacing:1.1px;
-      font-size:0.98rem;
-      text-transform:uppercase;
-      color:#122;
+
+    .hub-label { font-size: 0.88rem; }
+    .hub-mini {
+      font-size: 0.72rem;
+      text-transform: none;
+      letter-spacing: normal;
+      opacity: .96;
     }
-    .modalcard p{
-      margin: 0 0 12px;
-      color:#234;
-      opacity:.92;
-      font-size:0.92rem;
-      line-height:1.35;
+    .hub-arrow { flex-shrink: 0; font-size: 1rem; opacity: .92; }
+
+    @media (max-width: 550px) {
+      .glass-card { max-width: 99vw; }
+      .brand-logo { width: 70px; height: 70px; }
+      .credentials-vault { width: 98%; padding: 8px 8px;}
+      .marca-sistema { font-size: 0.97rem; }
     }
-    .actions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
+
+    /* BARRA DE ABAS (Bottom Tabs) */
+    .tabs{
+      position: fixed;
+      left: 0; right: 0; bottom: 0;
+      height: var(--tab-h);
+      padding-bottom: var(--safe-bottom);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      align-items: center;
+      background: rgba(255,255,255,0.62);
+      backdrop-filter: blur(18px) saturate(130%);
+      -webkit-backdrop-filter: blur(18px) saturate(130%);
+      border-top: 1px solid rgba(70,90,255,0.16);
+      box-shadow: 0 -10px 28px rgba(39,71,217,0.10);
+      z-index: 9999;
     }
-    .btnx{
-      flex:1;
-      min-width: 120px;
-      border:0;
+
+    .tab-btn{
+      height: calc(var(--tab-h) - 8px);
+      margin: 4px 4px 0 4px;
       border-radius: 14px;
-      padding: 12px 12px;
-      font-weight:700;
-      cursor:pointer;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      font-size:0.78rem;
-    }
-    .btn-primary{
-      background: linear-gradient(135deg, var(--royal), var(--royal2));
-      color:#fff;
-      box-shadow: 0 12px 28px rgba(39,71,217,0.26);
-    }
-    .btn-ghost{
-      background: rgba(39,71,217,0.10);
-      color: var(--royal);
-      border: 1px solid rgba(39,71,217,0.18);
-    }
-    .btn-close{
-      width:100%;
-      margin-top:10px;
-      background: rgba(0,0,0,0.06);
-      color:#223;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      color: #234;
+      border: 1px solid transparent;
+      transition: transform .12s ease-out, background .12s ease-out, border-color .12s ease-out;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      font-weight: 700;
+      font-size: .70rem;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
 
-    /* Small screens fine tuning */
-    @media (max-width: 420px){
-      .pill{display:none;}
-      .tab .lab span{display:none;}
+    .tab-btn i{ font-size: 1.15rem; margin-bottom: 2px; opacity: .86; }
+
+    .tab-btn.active{
+      background: linear-gradient(135deg, rgba(39,71,217,0.14), rgba(59,97,227,0.10));
+      border-color: rgba(39,71,217,0.20);
+      transform: translateY(-1px);
+      color: #1d3bb0;
+    }
+
+    .tab-btn.active i{ opacity: 1; }
+
+    /* fallback quando iframe bloquear (CSP / X-Frame-Options) */
+    .frame-blocked{
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+    }
+    .blocked-card{
+      max-width: 520px;
+      width: 100%;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.70);
+      border: 1px solid rgba(70,90,255,0.18);
+      box-shadow: var(--shadow);
+      padding: 18px 18px 16px 18px;
     }
   </style>
 </head>
-
 <body>
-  <div class="app">
+  <div class="app-shell">
+    <main class="app-views">
 
-    <div class="topbar">
-      <div class="brand">
-        <img src="kratos-logo.png" alt="Logo Kratos System">
-        <div class="txt">
-          <p class="title">Kratos System</p>
-          <p class="sub" id="subTitle">Hub de Acesso</p>
-        </div>
-      </div>
+      <!-- HUB (sua tela bonita) -->
+      <section class="view active" id="view-hub" data-tab="hub">
+        <div class="login-wrap">
+          <div class="glass-card">
+            <div class="card-top">
+              <div class="brand">
+                <img src="kratos-logo.png" class="brand-logo" alt="Logo Kratos System">
+                <div class="brand-title">Kratos System</div>
+              </div>
 
-      <div class="pill">
-        <i class="bi bi-shield-lock-fill"></i>
-        Sessão segura
-        <span style="width:6px;height:6px;border-radius:99px;background:var(--green);display:inline-block"></span>
-      </div>
-    </div>
+              <div class="credentials-vault">
+                <span class="vault-icon"><i class="bi bi-shield-lock-fill"></i></span>
+                <span class="vault-text">
+                  Acesso centralizado e seguro
+                  <span class="vault-mini">Troque de aba a qualquer momento</span>
+                </span>
+              </div>
+              <div class="small-note"><b>Modo App</b> (PWA)</div>
+            </div>
 
-    <div class="stage">
+            <div class="card-body">
+              <div class="role-info">
+                <i class="bi bi-info-circle-fill"></i>
+                &nbsp;Ambientes disponíveis para <span style="color:#23bb75;font-weight:700;">Supervisão</span>,
+                <span style="color:#23bb75;font-weight:700;">Estabelecimentos</span> e
+                <span style="color:#23bb75;font-weight:700;">Parcerias</span>.
+              </div>
 
-      <!-- Splash -->
-      <div class="splash" id="splash">
-        <img src="kratos-logo.png" class="logo" alt="Logo">
-        <p class="t1">CoopexHub</p>
-        <p class="t2">Carregando ambiente…</p>
-      </div>
+              <div class="hub-links">
+                <a class="hub-btn" href="#supervisao" data-go="supervisao">
+                  <div class="hub-icon"><i class="bi bi-headset"></i></div>
+                  <div class="hub-text">
+                    <span class="hub-label">Supervisão</span>
+                    <span class="hub-mini">Escalas, turnos e controle operacional.</span>
+                  </div>
+                  <div class="hub-arrow"><i class="bi bi-arrow-right-short"></i></div>
+                </a>
 
-      <!-- Main view -->
-      <div class="view">
-        <iframe id="frame" title="CoopexHub"></iframe>
-      </div>
+                <a class="hub-btn" href="#estabelecimentos" data-go="estabelecimentos">
+                  <div class="hub-icon"><i class="bi bi-shop-window"></i></div>
+                  <div class="hub-text">
+                    <span class="hub-label">Estabelecimentos</span>
+                    <span class="hub-mini">Financeiro, lançamentos e relatórios.</span>
+                  </div>
+                  <div class="hub-arrow"><i class="bi bi-arrow-right-short"></i></div>
+                </a>
 
-      <!-- Bottom tabs -->
-      <div class="tabs" role="tablist" aria-label="Ambientes">
-        <button class="tab active" id="tab-supervisao" type="button" data-key="supervisao">
-          <span class="ico"><i class="bi bi-headset"></i></span>
-          <span class="lab"><b>Supervisão</b><span>Escalas e operação</span></span>
-        </button>
+                <a class="hub-btn" href="#parceria" data-go="parceria">
+                  <div class="hub-icon"><i class="bi bi-people-fill"></i></div>
+                  <div class="hub-text">
+                    <span class="hub-label">Parceria</span>
+                    <span class="hub-mini">Portal de integração com o Kratos System.</span>
+                  </div>
+                  <div class="hub-arrow"><i class="bi bi-arrow-right-short"></i></div>
+                </a>
+              </div>
 
-        <button class="tab" id="tab-estab" type="button" data-key="estab">
-          <span class="ico"><i class="bi bi-shop-window"></i></span>
-          <span class="lab"><b>Estabelec.</b><span>Financeiro e dados</span></span>
-        </button>
-
-        <button class="tab" id="tab-parceria" type="button" data-key="parceria">
-          <span class="ico"><i class="bi bi-people-fill"></i></span>
-          <span class="lab"><b>Parceria</b><span>Portal de acesso</span></span>
-        </button>
-      </div>
-
-      <!-- Fallback modal -->
-      <div class="modalx" id="modal">
-        <div class="modalcard">
-          <h3 id="mTitle">Atenção</h3>
-          <p id="mText">
-            Este painel não permite abrir dentro do Hub (bloqueio de segurança do site).
-          </p>
-          <div class="actions">
-            <button class="btnx btn-primary" id="btnSame">Abrir no app</button>
-            <button class="btnx btn-ghost" id="btnNew">Abrir em nova aba</button>
+              <div class="marca-sistema">
+                © 2025 App Hub — Kratos System · Coopex
+              </div>
+            </div>
           </div>
-          <button class="btnx btn-close" id="btnClose">Voltar</button>
         </div>
-      </div>
+      </section>
 
-    </div>
+      <!-- SUPERVISÃO -->
+      <section class="view" id="view-supervisao" data-tab="supervisao" data-url="https://escalas-2-1.onrender.com/"></section>
+
+      <!-- ESTABELECIMENTOS -->
+      <section class="view" id="view-estabelecimentos" data-tab="estabelecimentos" data-url="https://financas-dxsu.onrender.com/"></section>
+
+      <!-- PARCERIA -->
+      <section class="view" id="view-parceria" data-tab="parceria" data-url="https://kratossystem.onrender.com/login"></section>
+
+    </main>
+
+    <!-- BOTTOM TABS: sempre visível, em qualquer aba -->
+    <nav class="tabs" aria-label="Abas do Kratos Hub">
+      <a class="tab-btn active" href="#hub" data-tab-btn="hub" role="button" aria-label="Hub">
+        <i class="bi bi-grid-1x2-fill"></i>
+        <span>Hub</span>
+      </a>
+      <a class="tab-btn" href="#supervisao" data-tab-btn="supervisao" role="button" aria-label="Supervisão">
+        <i class="bi bi-headset"></i>
+        <span>Supervisão</span>
+      </a>
+      <a class="tab-btn" href="#estabelecimentos" data-tab-btn="estabelecimentos" role="button" aria-label="Estabelecimentos">
+        <i class="bi bi-shop-window"></i>
+        <span>Estab.</span>
+      </a>
+      <a class="tab-btn" href="#parceria" data-tab-btn="parceria" role="button" aria-label="Parceria">
+        <i class="bi bi-people-fill"></i>
+        <span>Parceria</span>
+      </a>
+    </nav>
   </div>
 
-<script>
-(function(){
-  // === LINKS DOS SEUS PAINÉIS ===
-  const APPS = {
-    supervisao: {
-      name: "Supervisão",
-      url: "https://escalas-2-1.onrender.com/",
-      hint: "Escalas, turnos e controle operacional."
-    },
-    estab: {
-      name: "Estabelecimentos",
-      url: "https://financas-dxsu.onrender.com/",
-      hint: "Financeiro, lançamentos e relatórios."
-    },
-    parceria: {
-      name: "Parceria",
-      url: "https://kratossystem.onrender.com/login",
-      hint: "Portal de integração com o Kratos System."
-    }
-  };
-
-  const frame = document.getElementById("frame");
-  const splash = document.getElementById("splash");
-  const subTitle = document.getElementById("subTitle");
-
-  const modal = document.getElementById("modal");
-  const mTitle = document.getElementById("mTitle");
-  const mText  = document.getElementById("mText");
-  const btnSame = document.getElementById("btnSame");
-  const btnNew  = document.getElementById("btnNew");
-  const btnClose= document.getElementById("btnClose");
-
-  const tabs = Array.from(document.querySelectorAll(".tab"));
-
-  let currentKey = "supervisao";
-
-  // Splash
-  function showSplash(msg){
-    splash.classList.remove("hide");
-    splash.querySelector(".t2").textContent = msg || "Carregando ambiente…";
-  }
-  function hideSplash(){
-    splash.classList.add("hide");
-  }
-
-  // Modal
-  function openModal(title, text, url){
-    mTitle.textContent = title;
-    mText.textContent  = text;
-    modal.classList.add("show");
-    btnSame.onclick = () => { window.location.href = url; };
-    btnNew.onclick  = () => { window.open(url, "_blank"); };
-  }
-  function closeModal(){ modal.classList.remove("show"); }
-  btnClose.addEventListener("click", closeModal);
-  modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
-
-  // Load iframe (fallback se bloqueado)
-  function loadApp(key){
-    currentKey = key;
-    const app = APPS[key];
-
-    tabs.forEach(t => t.classList.toggle("active", t.dataset.key === key));
-    subTitle.textContent = app.name + " · " + (app.hint || "");
-
-    localStorage.setItem("coopexhub_last", key);
-
-    showSplash("Abrindo " + app.name + "…");
-    frame.src = app.url;
-
-    const onLoad = () => {
-      hideSplash();
-      frame.removeEventListener("load", onLoad);
-    };
-    frame.addEventListener("load", onLoad);
-
-    setTimeout(() => {
-      if (!splash.classList.contains("hide")) {
-        openModal(
-          app.name,
-          "Este painel pode estar bloqueando abertura dentro do Hub (segurança do site). Você pode abrir normalmente agora.",
-          app.url
-        );
-      }
-    }, 4500);
-  }
-
-  tabs.forEach(t => t.addEventListener("click", ()=> loadApp(t.dataset.key)));
-
-  const last = localStorage.getItem("coopexhub_last");
-  if (last && APPS[last]) currentKey = last;
-
-  loadApp(currentKey);
-})();
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
