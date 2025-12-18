@@ -25,11 +25,11 @@
     :root {
       --royal: #2747d9;
       --royal-2: #3b61e3;
-      --bg: #f4f7ff;
       --glass: rgba(255,255,255,0.32);
       --glass-border: rgba(70,90,255,0.13);
       --shadow: 0 6px 36px 0 rgba(39,71,217,0.13);
       --green: #23bb75;
+
       --tab-h: 72px;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-top: env(safe-area-inset-top, 0px);
@@ -43,14 +43,12 @@
       overflow: hidden; /* sensação de app */
     }
 
-    /* APP SHELL */
     .app-shell{
       position: fixed;
       inset: 0;
       display: flex;
       flex-direction: column;
       padding-top: var(--safe-top);
-      background: transparent;
     }
 
     .app-views{
@@ -68,7 +66,6 @@
     }
     .view.active{ display: block; }
 
-    /* IFRAME (para manter navegação interna sem “sair” do app) */
     .view iframe{
       width: 100%;
       height: 100%;
@@ -77,7 +74,7 @@
       background: #fff;
     }
 
-    /* TELA HUB (seu card original) */
+    /* HUB (seu card original) */
     .login-wrap {
       width: 100%;
       height: 100%;
@@ -99,11 +96,8 @@
       box-shadow: var(--shadow);
       overflow: hidden;
       padding: 0;
-      position: relative;
-      margin-bottom: 0;
       display: flex;
       flex-direction: column;
-      justify-content: stretch;
     }
 
     .card-top {
@@ -113,33 +107,15 @@
       padding: 38px 24px 30px 24px;
       border-bottom-left-radius: 50% 26px;
       border-bottom-right-radius: 50% 26px;
-      position: relative;
       box-shadow: 0 8px 22px 0 #2747d91b;
     }
 
-    .brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 0;
-    }
+    .brand { display:flex; flex-direction:column; align-items:center; gap:8px; }
 
     .brand-logo {
-      width: 92px;
-      height: 92px;
-      border-radius: 50%;
-      object-fit: contain;
-      border: 4px solid #fff;
-      background: #fff;
+      width: 92px; height: 92px; border-radius: 50%;
+      object-fit: contain; border: 4px solid #fff; background:#fff;
       box-shadow: 0 3px 24px 0 #2747d950;
-      transition: box-shadow 0.2s, transform 0.3s;
-      margin-bottom: 2px;
-    }
-
-    .brand-logo:hover {
-      transform: translateY(-1px) scale(1.01);
-      box-shadow: 0 6px 28px 0 #1d3bb055;
     }
 
     .brand-title {
@@ -152,16 +128,8 @@
       text-transform: uppercase;
     }
 
-    .small-note {
-      font-size: .96rem;
-      color: #e6ecfa;
-      opacity: .91;
-      margin-top: 4px;
-    }
-
     .credentials-vault {
-      margin: 0 auto;
-      margin-top: 16px;
+      margin: 16px auto 0 auto;
       width: 82%;
       min-height: 54px;
       background: rgba(255,255,255,0.44);
@@ -172,43 +140,18 @@
       align-items: center;
       gap: 15px;
       padding: 10px 16px 10px 14px;
-      position: relative;
-      z-index: 3;
     }
 
-    .vault-icon {
-      font-size: 1.5rem;
-      color: var(--royal-2);
-      margin-right: 2px;
-      opacity: 0.75;
-    }
-
-    .vault-text {
-      font-size: 1.08rem;
-      color: #234;
-      font-weight: 500;
-      letter-spacing: .01em;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-    }
-
-    .vault-mini {
-      font-size: .92rem;
-      color: #456;
-      opacity: .78;
-      font-weight: 400;
-    }
+    .vault-icon { font-size: 1.5rem; color: var(--royal-2); opacity: .75; }
+    .vault-text { font-size: 1.08rem; color: #234; font-weight: 500; display:flex; flex-direction:column; line-height:1.2; }
+    .vault-mini { font-size: .92rem; color: #456; opacity: .78; font-weight: 400; }
+    .small-note { font-size: .96rem; color: #e6ecfa; opacity: .91; margin-top: 4px; }
 
     .card-body {
       padding: 30px 28px 22px 28px;
-      background: transparent;
-      position: relative;
-      z-index: 2;
       flex: 1;
       display: flex;
       flex-direction: column;
-      justify-content: flex-start;
     }
 
     .role-info {
@@ -223,93 +166,52 @@
       text-align: left;
     }
 
-    .marca-sistema {
-      color: #1a1a1a;
-      text-align: center;
-      margin: 16px auto 8px auto;
-      font-size: 1.04rem;
-      letter-spacing: 0.01em;
-      font-weight: 500;
-      opacity: 0.96;
-      user-select: none;
-      width: 100%;
-    }
-
-    .hub-links {
-      margin-top: 18px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .hub-links { margin-top: 18px; display:flex; flex-direction:column; gap:10px; }
 
     .hub-btn {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
       padding: 11px 14px;
       border-radius: 12px;
-      border: none;
-      color: #fff;
-      text-decoration: none;
+      color:#fff; text-decoration:none;
       font-weight: 600;
       font-size: 0.94rem;
       text-transform: uppercase;
       letter-spacing: .08em;
       background: linear-gradient(135deg, var(--royal), var(--royal-2));
       box-shadow: 0 6px 20px #3b61e333;
-      transform: translateY(0);
-      transition:
-        transform 0.12s ease-out,
-        box-shadow 0.12s ease-out,
-        background 0.12s ease-out;
+      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
     }
-
-    .hub-btn:hover {
-      transform: translateY(-1px);
-      background: linear-gradient(135deg, var(--royal-2), var(--royal));
-      box-shadow: 0 10px 26px #2747d955;
-      color: #fff;
-    }
+    .hub-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 26px #2747d955; }
 
     .hub-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width: 34px; height: 34px; border-radius: 10px;
       background: rgba(255,255,255,0.16);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0;
       font-size: 1.1rem;
     }
-
-    .hub-text {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-      text-align: left;
-    }
-
+    .hub-text { flex:1; display:flex; flex-direction:column; line-height:1.2; text-align:left; }
     .hub-label { font-size: 0.88rem; }
-    .hub-mini {
-      font-size: 0.72rem;
-      text-transform: none;
-      letter-spacing: normal;
+    .hub-mini { font-size: 0.72rem; text-transform:none; letter-spacing: normal; opacity:.96; }
+    .hub-arrow { font-size: 1rem; opacity: .92; }
+
+    .marca-sistema{
+      color:#1a1a1a;
+      text-align:center;
+      margin: 16px auto 8px auto;
+      font-size: 1.04rem;
+      font-weight: 500;
       opacity: .96;
+      user-select:none;
     }
-    .hub-arrow { flex-shrink: 0; font-size: 1rem; opacity: .92; }
 
     @media (max-width: 550px) {
-      .glass-card { max-width: 99vw; }
       .brand-logo { width: 70px; height: 70px; }
-      .credentials-vault { width: 98%; padding: 8px 8px;}
+      .credentials-vault { width: 98%; padding: 8px 8px; }
       .marca-sistema { font-size: 0.97rem; }
     }
 
-    /* BARRA DE ABAS (Bottom Tabs) */
+    /* Bottom Tabs */
     .tabs{
       position: fixed;
       left: 0; right: 0; bottom: 0;
@@ -331,39 +233,36 @@
       height: calc(var(--tab-h) - 8px);
       margin: 4px 4px 0 4px;
       border-radius: 14px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      color: #234;
-      border: 1px solid transparent;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      color:#234;
+      border:1px solid transparent;
       transition: transform .12s ease-out, background .12s ease-out, border-color .12s ease-out;
-      user-select: none;
+      user-select:none;
       -webkit-tap-highlight-color: transparent;
       font-weight: 700;
       font-size: .70rem;
       letter-spacing: .04em;
       text-transform: uppercase;
     }
-
-    .tab-btn i{ font-size: 1.15rem; margin-bottom: 2px; opacity: .86; }
-
+    .tab-btn i{ font-size:1.15rem; margin-bottom:2px; opacity:.86; }
     .tab-btn.active{
       background: linear-gradient(135deg, rgba(39,71,217,0.14), rgba(59,97,227,0.10));
       border-color: rgba(39,71,217,0.20);
       transform: translateY(-1px);
-      color: #1d3bb0;
+      color:#1d3bb0;
     }
+    .tab-btn.active i{ opacity:1; }
 
-    .tab-btn.active i{ opacity: 1; }
-
-    /* fallback quando iframe bloquear (CSP / X-Frame-Options) */
+    /* fallback se iframe for bloqueado */
     .frame-blocked{
       height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       padding: 22px;
     }
     .blocked-card{
@@ -377,11 +276,12 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app-shell">
     <main class="app-views">
 
-      <!-- HUB (sua tela bonita) -->
+      <!-- HUB -->
       <section class="view active" id="view-hub" data-tab="hub">
         <div class="login-wrap">
           <div class="glass-card">
@@ -404,9 +304,7 @@
             <div class="card-body">
               <div class="role-info">
                 <i class="bi bi-info-circle-fill"></i>
-                &nbsp;Ambientes disponíveis para <span style="color:#23bb75;font-weight:700;">Supervisão</span>,
-                <span style="color:#23bb75;font-weight:700;">Estabelecimentos</span> e
-                <span style="color:#23bb75;font-weight:700;">Parcerias</span>.
+                &nbsp;Ambientes disponíveis para <b>Supervisão</b>, <b>Estabelecimentos</b> e <b>Parcerias</b>.
               </div>
 
               <div class="hub-links">
@@ -446,39 +344,157 @@
         </div>
       </section>
 
-      <!-- SUPERVISÃO -->
+      <!-- VIEWS com URL -->
       <section class="view" id="view-supervisao" data-tab="supervisao" data-url="https://escalas-2-1.onrender.com/"></section>
-
-      <!-- ESTABELECIMENTOS -->
       <section class="view" id="view-estabelecimentos" data-tab="estabelecimentos" data-url="https://financas-dxsu.onrender.com/"></section>
-
-      <!-- PARCERIA -->
       <section class="view" id="view-parceria" data-tab="parceria" data-url="https://kratossystem.onrender.com/login"></section>
 
     </main>
 
-    <!-- BOTTOM TABS: sempre visível, em qualquer aba -->
+    <!-- Abas fixas -->
     <nav class="tabs" aria-label="Abas do Kratos Hub">
       <a class="tab-btn active" href="#hub" data-tab-btn="hub" role="button" aria-label="Hub">
-        <i class="bi bi-grid-1x2-fill"></i>
-        <span>Hub</span>
+        <i class="bi bi-grid-1x2-fill"></i><span>Hub</span>
       </a>
       <a class="tab-btn" href="#supervisao" data-tab-btn="supervisao" role="button" aria-label="Supervisão">
-        <i class="bi bi-headset"></i>
-        <span>Supervisão</span>
+        <i class="bi bi-headset"></i><span>Supervisão</span>
       </a>
       <a class="tab-btn" href="#estabelecimentos" data-tab-btn="estabelecimentos" role="button" aria-label="Estabelecimentos">
-        <i class="bi bi-shop-window"></i>
-        <span>Estab.</span>
+        <i class="bi bi-shop-window"></i><span>Estab.</span>
       </a>
       <a class="tab-btn" href="#parceria" data-tab-btn="parceria" role="button" aria-label="Parceria">
-        <i class="bi bi-people-fill"></i>
-        <span>Parceria</span>
+        <i class="bi bi-people-fill"></i><span>Parceria</span>
       </a>
     </nav>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="app.js"></script>
+
+  <script>
+    // Tabs + iframes persistentes (sem precisar app.js separado)
+    (() => {
+      const TAB_IDS = ["hub", "supervisao", "estabelecimentos", "parceria"];
+
+      const views = {
+        hub: document.getElementById("view-hub"),
+        supervisao: document.getElementById("view-supervisao"),
+        estabelecimentos: document.getElementById("view-estabelecimentos"),
+        parceria: document.getElementById("view-parceria"),
+      };
+
+      const tabButtons = [...document.querySelectorAll("[data-tab-btn]")];
+
+      function setActiveTab(tabId, push = true){
+        if(!TAB_IDS.includes(tabId)) tabId = "hub";
+
+        Object.entries(views).forEach(([id, el]) => {
+          el.classList.toggle("active", id === tabId);
+        });
+
+        tabButtons.forEach(btn => {
+          btn.classList.toggle("active", btn.getAttribute("data-tab-btn") === tabId);
+        });
+
+        if(tabId !== "hub"){
+          ensureIframe(tabId);
+        }
+
+        const newHash = "#" + tabId;
+        if(push && location.hash !== newHash){
+          history.pushState({tabId}, "", newHash);
+        }
+      }
+
+      function ensureIframe(tabId){
+        const view = views[tabId];
+        if(!view) return;
+        if(view.querySelector("iframe")) return;
+
+        const url = view.getAttribute("data-url");
+        if(!url) return;
+
+        const iframe = document.createElement("iframe");
+        iframe.src = url;
+        iframe.loading = "eager";
+        iframe.referrerPolicy = "no-referrer-when-downgrade";
+        iframe.allow = "clipboard-read; clipboard-write; fullscreen; geolocation; camera; microphone";
+        view.appendChild(iframe);
+
+        // fallback (se bloquear iframe)
+        const t = setTimeout(() => {
+          if(!view.classList.contains("active")) return;
+          showBlockedFallback(view, url);
+        }, 6000);
+
+        iframe.addEventListener("load", () => {
+          clearTimeout(t);
+          const fb = view.querySelector("[data-blocked]");
+          if(fb) fb.remove();
+        });
+      }
+
+      function showBlockedFallback(view, url){
+        if(view.querySelector("[data-blocked]")) return;
+
+        const wrapper = document.createElement("div");
+        wrapper.className = "frame-blocked";
+        wrapper.setAttribute("data-blocked", "1");
+        wrapper.innerHTML = `
+          <div class="blocked-card">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <i class="bi bi-shield-exclamation" style="font-size:1.2rem;color:#1d3bb0;"></i>
+              <div style="font-weight:800;color:#1d3bb0;">Este sistema pode ter bloqueado abrir dentro do Hub.</div>
+            </div>
+            <div style="color:#345; font-weight:600; font-size:.95rem; line-height:1.35;">
+              Alguns sites bloqueiam iframe por segurança (CSP/X-Frame-Options).
+              Se acontecer, use “Abrir direto”.
+            </div>
+            <div class="d-flex gap-2 mt-3">
+              <a class="btn btn-primary" style="background:#2747d9;border:0;" target="_blank" rel="noopener" href="${url}">
+                Abrir direto
+              </a>
+              <button class="btn btn-outline-primary" style="border-color:#2747d9;color:#2747d9;" type="button" id="retryFrame">
+                Tentar novamente
+              </button>
+            </div>
+          </div>
+        `;
+        view.appendChild(wrapper);
+
+        wrapper.querySelector("#retryFrame")?.addEventListener("click", () => {
+          const iframe = view.querySelector("iframe");
+          if(iframe) iframe.src = iframe.src;
+          wrapper.remove();
+        });
+      }
+
+      // Botões do Hub
+      document.querySelectorAll("[data-go]").forEach(a => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          setActiveTab(a.getAttribute("data-go"), true);
+        });
+      });
+
+      // Botões das tabs
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.preventDefault();
+          setActiveTab(btn.getAttribute("data-tab-btn"), true);
+        });
+      });
+
+      window.addEventListener("popstate", () => {
+        setActiveTab((location.hash || "#hub").replace("#",""), false);
+      });
+
+      setActiveTab((location.hash || "#hub").replace("#",""), false);
+
+      // Service worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
+      }
+    })();
+  </script>
 </body>
 </html>
