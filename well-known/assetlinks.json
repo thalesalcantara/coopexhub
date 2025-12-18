@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.github.thalesalcantara.twa",
+      "sha256_cert_fingerprints": [
+        "47:EB:8A:3B:81:5A:DA:B6:38:8F:38:18:C4:0B:19:1D:41:7D:4A:3A:96:94:8E:E4:5F:39:2C:7A:2F:F0:4E:E6"
+      ]
+    }
+  }
+]
