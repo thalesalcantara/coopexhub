@@ -30,7 +30,7 @@
       --bgA:#f5f8ff;
       --bgB:#d7e6ff;
 
-      --card: rgba(255,255,255,.72);
+      --card: rgba(255,255,255,.78);
       --stroke: rgba(39,71,217,.14);
       --shadow: 0 18px 55px rgba(39,71,217,.16);
 
@@ -38,16 +38,13 @@
       --r-lg: 22px;
       --r-md: 18px;
 
-      --pad: 16px;
-
-      /* Dock real para não cortar em gesto/rodapé */
-      --dockH: 72px; /* altura do dock */
+      --dockH: 72px;
       --safeB: env(safe-area-inset-bottom, 0px);
       --safeT: env(safe-area-inset-top, 0px);
     }
 
-    *{ box-sizing: border-box; }
-    html,body{ height:100%; }
+    *{ box-sizing:border-box; }
+    html, body{ height:100%; }
 
     body{
       margin:0;
@@ -57,13 +54,13 @@
       background:
         radial-gradient(900px 520px at 18% 10%, #ffffff 0%, rgba(255,255,255,0) 60%),
         linear-gradient(130deg, var(--bgA) 0%, var(--bgB) 100%);
-      overflow: hidden;
+      overflow:hidden;
       -webkit-tap-highlight-color: transparent;
       overscroll-behavior: none;
       touch-action: manipulation;
     }
 
-    /* “App shell” centralizado em telas grandes, full em mobile */
+    /* App shell */
     .app{
       height:100dvh;
       width:100%;
@@ -73,21 +70,22 @@
     }
 
     .shell{
-      width: min(520px, 100%);
-      height: 100%;
+      width: min(540px, 100%);
+      height:100%;
       display:flex;
       flex-direction:column;
       gap: 12px;
     }
 
-    /* Top */
+    /* Topbar */
     .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      gap: 12px;
-      padding: 6px 4px;
+      gap: 10px;
+      padding: 4px 4px;
       flex: 0 0 auto;
+      min-height: 54px;
     }
 
     .brand{
@@ -101,8 +99,8 @@
       width: 44px;
       height: 44px;
       border-radius: 16px;
-      background: rgba(255,255,255,.88);
-      border: 1px solid rgba(255,255,255,.9);
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(255,255,255,.92);
       box-shadow: 0 12px 30px rgba(39,71,217,.18);
       display:flex;
       align-items:center;
@@ -110,18 +108,14 @@
       overflow:hidden;
       flex: 0 0 auto;
     }
-    .logo img{
-      width: 82%;
-      height: 82%;
-      object-fit: contain;
-    }
+    .logo img{ width: 82%; height: 82%; object-fit: contain; }
 
     .brandTxt{ min-width:0; }
     .brandTxt .t{
       margin:0;
       font-family: Orbitron, sans-serif;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.4px;
       font-size: 0.98rem;
       line-height: 1.05;
       white-space: nowrap;
@@ -137,19 +131,25 @@
       text-overflow: ellipsis;
     }
 
+    .topRight{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      flex: 0 0 auto;
+    }
+
     .chip{
       display:flex;
       align-items:center;
       gap: 8px;
       padding: 10px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,.70);
+      background: rgba(255,255,255,.72);
       border: 1px solid rgba(39,71,217,.14);
       box-shadow: 0 14px 40px rgba(39,71,217,.10);
       color: #1e2b4a;
       font-size: .86rem;
       white-space: nowrap;
-      flex: 0 0 auto;
     }
     .chip i{ color: var(--royal); }
     .dot{
@@ -160,179 +160,94 @@
       display:inline-block;
     }
 
-    /* Stage */
+    .kebab{
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      border: 1px solid rgba(39,71,217,.14);
+      background: rgba(255,255,255,.72);
+      box-shadow: 0 14px 40px rgba(39,71,217,.10);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color: #1e2b4a;
+      cursor:pointer;
+      user-select:none;
+    }
+    .kebab:active{ transform: scale(.98); }
+    .kebab i{ font-size: 1.25rem; color: var(--royal); }
+
+    /* Stage (container) */
     .stage{
       position:relative;
       flex: 1 1 auto;
       border-radius: var(--r-xl);
-      background: rgba(255,255,255,.40);
+      background: rgba(255,255,255,.42);
       border: 1px solid rgba(39,71,217,.12);
       box-shadow: var(--shadow);
-      overflow: hidden;
+      overflow:hidden;
       backdrop-filter: blur(18px) saturate(135%);
       -webkit-backdrop-filter: blur(18px) saturate(135%);
     }
 
-    /* Conteúdo rolável + reserva do dock */
-    .content{
-      height: 100%;
-      overflow:auto;
-      -webkit-overflow-scrolling: touch;
-      padding: 18px;
-      padding-bottom: calc(18px + var(--dockH) + 14px + var(--safeB));
+    /* Frame area */
+    .frameWrap{
+      position:absolute;
+      inset: 0;
+      padding-bottom: calc(var(--dockH) + 14px + var(--safeB));
     }
 
-    .hero{
-      border-radius: var(--r-lg);
-      padding: 18px 16px;
-      background: linear-gradient(135deg, rgba(39,71,217,.95), rgba(59,97,227,.92));
-      color: #fff;
-      box-shadow: 0 18px 55px rgba(39,71,217,.26);
-      display:flex;
-      align-items:center;
-      gap: 14px;
+    iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      background: #fff;
     }
-    .hero .hlogo{
-      width: 58px; height: 58px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.95);
-      border: 3px solid rgba(255,255,255,.92);
-      display:flex;
+
+    /* Loader */
+    .loader{
+      position:absolute;
+      inset: 0;
+      display:none;
       align-items:center;
       justify-content:center;
-      flex: 0 0 auto;
-      overflow:hidden;
+      background: rgba(255,255,255,.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 6;
     }
-    .hero .hlogo img{
-      width: 82%;
-      height: 82%;
-      object-fit: contain;
-    }
-    .hero h1{
-      margin:0;
-      font-family: Orbitron, sans-serif;
-      letter-spacing: 1.7px;
-      text-transform: uppercase;
-      font-size: 1.05rem;
-      line-height: 1.12;
-    }
-    .hero p{
-      margin: 6px 0 0;
-      opacity: .92;
-      font-size: .92rem;
-      line-height: 1.2;
-    }
-
-    .section{
-      margin-top: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 10px;
-    }
-    .section .h{
-      margin:0;
-      font-size: .92rem;
-      color: #1a2440;
-      letter-spacing:.04em;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .section .hint{
-      margin:0;
-      color: var(--muted);
-      font-size: .86rem;
-      white-space: nowrap;
-    }
-
-    .grid{
-      margin-top: 10px;
-      display:grid;
-      gap: 10px;
-    }
-
-    .card{
-      border-radius: var(--r-md);
-      background: var(--card);
-      border: 1px solid var(--stroke);
-      box-shadow: 0 14px 40px rgba(39,71,217,.11);
-      padding: 14px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap: 14px;
-      cursor:pointer;
-      user-select:none;
-      transform: translateZ(0);
-      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-    }
-    .card:active{ transform: scale(.992); }
-
-    .left{
+    .loader.on{ display:flex; }
+    .loaderBox{
       display:flex;
       align-items:center;
       gap: 12px;
-      min-width:0;
-    }
-
-    .ico{
-      width: 48px;
-      height: 48px;
+      padding: 14px 16px;
       border-radius: 18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(39,71,217,.10);
-      color: var(--royal);
-      font-size: 1.25rem;
-      flex: 0 0 auto;
-      box-shadow: inset 0 0 0 1px rgba(39,71,217,.10);
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 18px 55px rgba(39,71,217,.18);
+      color: #1e2b4a;
+      font-weight: 700;
+      letter-spacing: .02em;
     }
+    .spinner{
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      border: 2px solid rgba(39,71,217,.18);
+      border-top-color: rgba(39,71,217,.95);
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg); } }
 
-    .txt{
-      min-width:0;
-    }
-    .txt .b{
-      margin:0;
-      font-weight: 800;
-      font-size: .98rem;
-      letter-spacing:.04em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .txt .s{
-      margin:5px 0 0;
-      font-size: .88rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .go{
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: rgba(39,71,217,.08);
-      color: var(--royal);
-      flex: 0 0 auto;
-    }
-    .go i{ font-size: 1.4rem; }
-
-    /* Dock inferior FIXO dentro da stage */
+    /* Dock inferior fixo */
     .dock{
-      position: absolute;
+      position:absolute;
       left: 12px;
       right: 12px;
       bottom: calc(12px + var(--safeB));
       height: var(--dockH);
       border-radius: 26px;
-      background: rgba(255,255,255,.68);
+      background: rgba(255,255,255,.70);
       border: 1px solid rgba(39,71,217,.14);
       box-shadow: 0 20px 60px rgba(39,71,217,.18);
       display:flex;
@@ -341,11 +256,12 @@
       gap: 10px;
       backdrop-filter: blur(18px) saturate(140%);
       -webkit-backdrop-filter: blur(18px) saturate(140%);
+      z-index: 7;
     }
 
     .tab{
       flex:1;
-      height: 100%;
+      height:100%;
       border:0;
       border-radius: 20px;
       background: transparent;
@@ -360,8 +276,9 @@
       user-select:none;
       min-width: 0;
     }
+    .tab:active{ transform: scale(.99); }
 
-    .tab .tIco{
+    .tIco{
       width: 42px;
       height: 42px;
       border-radius: 16px;
@@ -373,9 +290,9 @@
       flex: 0 0 auto;
       box-shadow: inset 0 0 0 1px rgba(39,71,217,.10);
     }
-    .tab .tIco i{ font-size: 1.15rem; }
+    .tIco i{ font-size: 1.12rem; }
 
-    .tab .label{
+    .label{
       font-weight: 800;
       font-size: .90rem;
       letter-spacing:.05em;
@@ -397,17 +314,163 @@
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
     }
 
-    /* Ajustes para telas menores */
-    @media (max-width: 420px){
-      .chip{ display:none; }
-      .content{ padding: 16px; }
-      .tab .label{ font-size: .84rem; }
+    /* Bottom sheet (3 pontinhos) */
+    .sheetBg{
+      position: fixed;
+      inset:0;
+      background: rgba(8, 14, 28, .35);
+      display:none;
+      align-items:flex-end;
+      justify-content:center;
+      padding: 18px 12px calc(12px + var(--safeB));
+      z-index: 30;
+    }
+    .sheetBg.on{ display:flex; }
+
+    .sheet{
+      width: min(540px, 100%);
+      border-radius: 26px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 30px 90px rgba(39,71,217,.22);
+      overflow:hidden;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    }
+    .sheetHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 14px 16px 10px;
+      gap: 10px;
+    }
+    .sheetHead .ttl{
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: #1b2746;
+      font-size: .92rem;
+      margin:0;
+    }
+    .sheetHead .sub{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: .86rem;
+    }
+    .sheetClose{
+      width: 42px; height: 42px;
+      border-radius: 16px;
+      border: 1px solid rgba(39,71,217,.14);
+      background: rgba(39,71,217,.06);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      color: var(--royal);
+      flex: 0 0 auto;
     }
 
-    /* Ajuste fino para aparelhos com fonte grande / acessibilidade */
+    .sheetBody{ padding: 6px 10px 12px; }
+
+    .sheetBtn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(39,71,217,.12);
+      background: rgba(255,255,255,.75);
+      box-shadow: 0 14px 40px rgba(39,71,217,.08);
+      cursor:pointer;
+      user-select:none;
+      margin: 8px 0;
+    }
+    .sheetBtn:active{ transform: scale(.995); }
+
+    .sbLeft{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width:0;
+    }
+    .sbIco{
+      width: 44px; height: 44px;
+      border-radius: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(39,71,217,.10);
+      color: var(--royal);
+      flex: 0 0 auto;
+    }
+    .sbTxt{ min-width:0; }
+    .sbTxt .a{
+      margin:0;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-size: .92rem;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      color: #1b2746;
+    }
+    .sbTxt .b{
+      margin:4px 0 0;
+      color: var(--muted);
+      font-size: .86rem;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .sbGo{
+      width: 40px; height: 40px;
+      border-radius: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(39,71,217,.07);
+      color: var(--royal);
+      flex: 0 0 auto;
+    }
+
+    /* Toast */
+    .toast{
+      position: fixed;
+      left: 50%;
+      bottom: calc(14px + var(--dockH) + var(--safeB));
+      transform: translateX(-50%);
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 24px 70px rgba(39,71,217,.20);
+      border-radius: 999px;
+      padding: 10px 14px;
+      display:none;
+      align-items:center;
+      gap: 10px;
+      z-index: 50;
+      max-width: min(540px, calc(100% - 24px));
+    }
+    .toast.on{ display:flex; }
+    .toast i{ color: var(--royal); }
+    .toast span{
+      font-weight: 700;
+      color: #1b2746;
+      font-size: .90rem;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    @media (max-width: 420px){
+      .chip{ display:none; }
+      .label{ font-size: .84rem; }
+    }
     @media (max-width: 380px){
       .tab{ gap: 8px; }
-      .tab .tIco{ width: 40px; height: 40px; }
+      .tIco{ width: 40px; height: 40px; }
     }
   </style>
 </head>
@@ -423,91 +486,155 @@
           </div>
           <div class="brandTxt">
             <p class="t">Kratos System</p>
-            <p class="s" id="subTitle">Hub de Acesso</p>
+            <p class="s" id="subTitle">Hub · Carregando…</p>
           </div>
         </div>
 
-        <div class="chip" aria-label="Sessão segura">
-          <i class="bi bi-shield-lock-fill"></i>
-          Sessão segura
-          <span class="dot" aria-hidden="true"></span>
+        <div class="topRight">
+          <div class="chip" aria-label="Sessão segura">
+            <i class="bi bi-shield-lock-fill"></i>
+            Sessão segura
+            <span class="dot" aria-hidden="true"></span>
+          </div>
+
+          <button class="kebab" id="btnMenu" type="button" aria-label="Menu">
+            <i class="bi bi-three-dots-vertical"></i>
+          </button>
         </div>
       </div>
 
       <div class="stage" role="application" aria-label="Kratos Hub">
-        <div class="content" id="scrollArea">
+        <div class="frameWrap">
+          <iframe id="appFrame" title="Kratos Hub Frame" referrerpolicy="no-referrer"></iframe>
+        </div>
 
-          <div class="hero">
-            <div class="hlogo" aria-hidden="true">
-              <img src="kratos-logo.png" alt="" />
-            </div>
-            <div>
-              <h1>CoopexHub</h1>
-              <p>Toque em um ambiente para abrir em tela cheia. Navegação otimizada para celular.</p>
-            </div>
-          </div>
-
-          <div class="section">
-            <p class="h">Ambientes</p>
-            <p class="hint" id="hint">Selecione abaixo</p>
-          </div>
-
-          <div class="grid">
-            <div class="card" data-key="supervisao" role="button" tabindex="0" aria-label="Abrir Supervisão">
-              <div class="left">
-                <div class="ico"><i class="bi bi-headset"></i></div>
-                <div class="txt">
-                  <p class="b">Supervisão</p>
-                  <p class="s">Escalas, turnos e controle operacional.</p>
-                </div>
-              </div>
-              <div class="go"><i class="bi bi-arrow-right-short"></i></div>
-            </div>
-
-            <div class="card" data-key="estab" role="button" tabindex="0" aria-label="Abrir Estabelecimentos">
-              <div class="left">
-                <div class="ico"><i class="bi bi-shop-window"></i></div>
-                <div class="txt">
-                  <p class="b">Estabelecimentos</p>
-                  <p class="s">Financeiro, lançamentos e relatórios.</p>
-                </div>
-              </div>
-              <div class="go"><i class="bi bi-arrow-right-short"></i></div>
-            </div>
-
-            <div class="card" data-key="parceria" role="button" tabindex="0" aria-label="Abrir Parceria">
-              <div class="left">
-                <div class="ico"><i class="bi bi-people-fill"></i></div>
-                <div class="txt">
-                  <p class="b">Parceria</p>
-                  <p class="s">Portal de integração com o Kratos System.</p>
-                </div>
-              </div>
-              <div class="go"><i class="bi bi-arrow-right-short"></i></div>
-            </div>
+        <div class="loader" id="loader" aria-live="polite">
+          <div class="loaderBox">
+            <span class="spinner" aria-hidden="true"></span>
+            <span id="loaderText">Abrindo…</span>
           </div>
         </div>
 
         <!-- Dock inferior -->
         <div class="dock" role="tablist" aria-label="Navegação">
-          <button class="tab active" type="button" data-key="supervisao" role="tab" aria-selected="true">
+          <button class="tab" id="tabSupervisao" type="button" data-key="supervisao" role="tab" aria-selected="false">
             <span class="tIco"><i class="bi bi-headset"></i></span>
             <span class="label">Supervisão</span>
           </button>
 
-          <button class="tab" type="button" data-key="estab" role="tab" aria-selected="false">
+          <button class="tab" id="tabEstab" type="button" data-key="estab" role="tab" aria-selected="false">
             <span class="tIco"><i class="bi bi-shop-window"></i></span>
             <span class="label">Estab.</span>
           </button>
 
-          <button class="tab" type="button" data-key="parceria" role="tab" aria-selected="false">
+          <button class="tab" id="tabParceria" type="button" data-key="parceria" role="tab" aria-selected="false">
             <span class="tIco"><i class="bi bi-people-fill"></i></span>
             <span class="label">Parceria</span>
           </button>
         </div>
+      </div>
 
+    </div>
+  </div>
+
+  <!-- Bottom sheet -->
+  <div class="sheetBg" id="sheetBg" aria-hidden="true">
+    <div class="sheet" role="dialog" aria-modal="true" aria-label="Menu do Hub">
+      <div class="sheetHead">
+        <div>
+          <p class="ttl">Menu</p>
+          <p class="sub" id="sheetSub">Opções rápidas</p>
+        </div>
+        <button class="sheetClose" id="btnCloseSheet" type="button" aria-label="Fechar menu">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="sheetBody">
+        <button class="sheetBtn" type="button" data-act="switch" data-key="supervisao">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-headset"></i></div>
+            <div class="sbTxt">
+              <p class="a">Supervisão</p>
+              <p class="b">Escalas e controle operacional</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
+        </button>
+
+        <button class="sheetBtn" type="button" data-act="switch" data-key="estab">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-shop-window"></i></div>
+            <div class="sbTxt">
+              <p class="a">Estabelecimentos</p>
+              <p class="b">Financeiro e relatórios</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
+        </button>
+
+        <button class="sheetBtn" type="button" data-act="switch" data-key="parceria">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-people-fill"></i></div>
+            <div class="sbTxt">
+              <p class="a">Parceria</p>
+              <p class="b">Portal de integração</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
+        </button>
+
+        <button class="sheetBtn" type="button" data-act="torch">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-flashlight"></i></div>
+            <div class="sbTxt">
+              <p class="a" id="torchTitle">Lanterna</p>
+              <p class="b" id="torchDesc">Ligar / desligar (quando suportado)</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-toggle2-off" id="torchIcon"></i></div>
+        </button>
+
+        <button class="sheetBtn" type="button" data-act="reload">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-arrow-clockwise"></i></div>
+            <div class="sbTxt">
+              <p class="a">Recarregar</p>
+              <p class="b">Atualiza o painel atual</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
+        </button>
+
+        <button class="sheetBtn" type="button" data-act="copy">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-link-45deg"></i></div>
+            <div class="sbTxt">
+              <p class="a">Copiar link</p>
+              <p class="b">Copia o endereço do painel atual</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-clipboard"></i></div>
+        </button>
+
+        <button class="sheetBtn" type="button" data-act="external">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-box-arrow-up-right"></i></div>
+            <div class="sbTxt">
+              <p class="a">Abrir no navegador</p>
+              <p class="b">Caso algum painel bloqueie o modo interno</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
+        </button>
       </div>
     </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="bi bi-info-circle"></i>
+    <span id="toastMsg">Ok</span>
   </div>
 
 <script>
@@ -518,13 +645,43 @@
     parceria:   "https://kratossystem.onrender.com/login"
   };
 
-  const tabs  = [...document.querySelectorAll(".tab")];
-  const cards = [...document.querySelectorAll(".card")];
-  const subTitle = document.getElementById("subTitle");
-  const hint = document.getElementById("hint");
+  // Elements
+  const frame = document.getElementById("appFrame");
+  const loader = document.getElementById("loader");
+  const loaderText = document.getElementById("loaderText");
 
+  const tabs  = [...document.querySelectorAll(".tab")];
+  const subTitle = document.getElementById("subTitle");
+
+  const sheetBg = document.getElementById("sheetBg");
+  const btnMenu = document.getElementById("btnMenu");
+  const btnCloseSheet = document.getElementById("btnCloseSheet");
+
+  const toast = document.getElementById("toast");
+  const toastMsg = document.getElementById("toastMsg");
+
+  const torchTitle = document.getElementById("torchTitle");
+  const torchDesc  = document.getElementById("torchDesc");
+  const torchIcon  = document.getElementById("torchIcon");
+
+  // Helpers
   function labelFor(key){
-    return key === "supervisao" ? "Supervisão" : (key === "estab" ? "Estabelecimentos" : "Parceria");
+    return key === "supervisao" ? "Supervisão"
+      : (key === "estab" ? "Estabelecimentos" : "Parceria");
+  }
+
+  function showLoader(text){
+    loaderText.textContent = text || "Abrindo…";
+    loader.classList.add("on");
+  }
+  function hideLoader(){ loader.classList.remove("on"); }
+
+  let toastTimer = null;
+  function showToast(msg){
+    toastMsg.textContent = msg;
+    toast.classList.add("on");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove("on"), 2200);
   }
 
   function setActive(key){
@@ -535,19 +692,35 @@
     });
 
     const lab = labelFor(key);
-    subTitle.textContent = lab + " · Toque para abrir";
-    hint.textContent = "Selecionado: " + lab;
-
+    subTitle.textContent = lab + " · Em execução";
     localStorage.setItem("hub_last", key);
   }
 
-  function openApp(key){
-    if (!APPS[key]) return;
+  // Iframe navigation (dock fixo dentro do hub)
+  function openApp(key, opts = { silent:false }){
+    const url = APPS[key];
+    if (!url) return;
+
     setActive(key);
-    // abre no mesmo contexto (TWA) para parecer app
-    window.location.href = APPS[key];
+
+    if (!opts.silent) showLoader("Abrindo " + labelFor(key) + "…");
+
+    // Tenta abrir dentro do iframe (se o site permitir)
+    frame.src = url;
+
+    // fallback: se em 2.3s não carregar, sugere abrir externo
+    const watchdog = setTimeout(() => {
+      hideLoader();
+      showToast("Se não abrir, use: Menu → Abrir no navegador.");
+    }, 2300);
+
+    frame.onload = () => {
+      clearTimeout(watchdog);
+      hideLoader();
+    };
   }
 
+  // Tabs
   function bindClick(el){
     el.addEventListener("click", () => openApp(el.dataset.key));
     el.addEventListener("keydown", (e) => {
@@ -557,13 +730,151 @@
       }
     });
   }
-
   tabs.forEach(bindClick);
-  cards.forEach(bindClick);
 
+  // Sheet open/close
+  function openSheet(){
+    sheetBg.classList.add("on");
+    sheetBg.setAttribute("aria-hidden", "false");
+  }
+  function closeSheet(){
+    sheetBg.classList.remove("on");
+    sheetBg.setAttribute("aria-hidden", "true");
+  }
+  btnMenu.addEventListener("click", openSheet);
+  btnCloseSheet.addEventListener("click", closeSheet);
+  sheetBg.addEventListener("click", (e) => { if (e.target === sheetBg) closeSheet(); });
+
+  // Sheet actions
+  sheetBg.querySelectorAll("[data-act]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const act = btn.dataset.act;
+      const key = btn.dataset.key;
+
+      if (act === "switch") {
+        closeSheet();
+        openApp(key);
+        return;
+      }
+
+      if (act === "reload") {
+        closeSheet();
+        try{
+          showLoader("Recarregando…");
+          frame.contentWindow.location.reload();
+        }catch{
+          // se cross-origin bloqueou reload via contentWindow
+          frame.src = frame.src;
+        } finally {
+          setTimeout(hideLoader, 700);
+        }
+        return;
+      }
+
+      if (act === "copy") {
+        closeSheet();
+        try{
+          await navigator.clipboard.writeText(frame.src || "");
+          showToast("Link copiado.");
+        }catch{
+          showToast("Não foi possível copiar.");
+        }
+        return;
+      }
+
+      if (act === "external") {
+        closeSheet();
+        const url = frame.src || APPS[localStorage.getItem("hub_last")] || APPS.supervisao;
+        window.open(url, "_blank", "noopener,noreferrer");
+        return;
+      }
+
+      if (act === "torch") {
+        closeSheet();
+        await toggleTorch();
+        return;
+      }
+    });
+  });
+
+  // Torch (lanterna) - funciona somente em HTTPS e aparelhos compatíveis
+  let torchOn = false;
+  let torchStream = null;
+  let torchTrack = null;
+
+  function updateTorchUI(){
+    if (torchOn) {
+      torchTitle.textContent = "Lanterna ligada";
+      torchDesc.textContent = "Toque para desligar";
+      torchIcon.className = "bi bi-toggle2-on";
+    } else {
+      torchTitle.textContent = "Lanterna";
+      torchDesc.textContent = "Ligar / desligar (quando suportado)";
+      torchIcon.className = "bi bi-toggle2-off";
+    }
+  }
+
+  async function toggleTorch(){
+    // desligar
+    if (torchOn){
+      try{
+        if (torchTrack) torchTrack.stop();
+        if (torchStream) torchStream.getTracks().forEach(t => t.stop());
+      }catch{}
+      torchOn = false;
+      torchTrack = null;
+      torchStream = null;
+      updateTorchUI();
+      showToast("Lanterna desligada.");
+      return;
+    }
+
+    // ligar
+    try{
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+        showToast("Lanterna não suportada neste aparelho.");
+        return;
+      }
+
+      // pede câmera traseira
+      torchStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: "environment" } },
+        audio: false
+      });
+
+      torchTrack = torchStream.getVideoTracks()[0];
+      const caps = torchTrack.getCapabilities ? torchTrack.getCapabilities() : {};
+      if (!caps.torch){
+        // não suporta torch
+        torchStream.getTracks().forEach(t => t.stop());
+        torchStream = null; torchTrack = null;
+        showToast("Lanterna não suportada neste aparelho.");
+        return;
+      }
+
+      await torchTrack.applyConstraints({ advanced: [{ torch: true }] });
+      torchOn = true;
+      updateTorchUI();
+      showToast("Lanterna ligada.");
+    }catch(err){
+      try{
+        if (torchStream) torchStream.getTracks().forEach(t => t.stop());
+      }catch{}
+      torchStream = null; torchTrack = null;
+      showToast("Não foi possível ligar a lanterna.");
+    }
+  }
+
+  updateTorchUI();
+
+  // Boot
   const last = localStorage.getItem("hub_last");
-  if (last && APPS[last]) setActive(last);
+  const startKey = (last && APPS[last]) ? last : "supervisao";
+  setActive(startKey);
+  showLoader("Iniciando…");
+  openApp(startKey, { silent:true });
 
+  // PWA Service Worker (somente cache do Hub)
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./service-worker.js").catch(() => {});
   }
