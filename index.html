@@ -1,325 +1,571 @@
 <!doctype html>
-<html lang="pt-br" data-bs-theme="light">
+<html lang="pt-br">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <title>Kratos System · Hub</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#2747d9">
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon-192.png" sizes="192x192">
-  <link rel="apple-touch-icon" href="icon-192.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Mobile / PWA -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#2747d9" />
+  <meta name="color-scheme" content="light" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon-192.png" sizes="192x192" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <!-- Fonts / Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
     :root{
-      --royal:#2747d9; --royal2:#3b61e3;
-      --bg1:#f2f6ff; --bg2:#d2e1ff;
-      --glass: rgba(255,255,255,0.36);
-      --glassBorder: rgba(70,90,255,0.16);
-      --shadow: 0 10px 46px rgba(39,71,217,0.18);
-      --green:#23bb75; --ink:#0b1220; --muted:#5b6478;
-      --radius: 26px;
-      --dockH: calc(76px + env(safe-area-inset-bottom, 0px));
-      --pad: 12px;
-      --dockGap: 10px;
+      --royal:#2747d9;
+      --royal2:#3b61e3;
+      --ink:#0b1220;
+      --muted:#5c667a;
+
+      --bgA:#f5f8ff;
+      --bgB:#d7e6ff;
+
+      --card: rgba(255,255,255,.72);
+      --stroke: rgba(39,71,217,.14);
+      --shadow: 0 18px 55px rgba(39,71,217,.16);
+
+      --r-xl: 28px;
+      --r-lg: 22px;
+      --r-md: 18px;
+
+      --pad: 16px;
+
+      /* Dock real para não cortar em gesto/rodapé */
+      --dockH: 72px; /* altura do dock */
+      --safeB: env(safe-area-inset-bottom, 0px);
+      --safeT: env(safe-area-inset-top, 0px);
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
+
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+
     body{
       margin:0;
       height:100dvh;
-      font-family:'Roboto',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--ink);
       background:
-        radial-gradient(900px 500px at 20% 10%, #ffffff 0%, rgba(255,255,255,0) 60%),
-        linear-gradient(120deg, var(--bg1) 0%, var(--bg2) 100%);
-      color:var(--ink);
-      overflow:hidden;
+        radial-gradient(900px 520px at 18% 10%, #ffffff 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(130deg, var(--bgA) 0%, var(--bgB) 100%);
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+      overscroll-behavior: none;
+      touch-action: manipulation;
     }
 
-    .app{height:100dvh; width:100vw; display:flex; flex-direction:column;}
+    /* “App shell” centralizado em telas grandes, full em mobile */
+    .app{
+      height:100dvh;
+      width:100%;
+      display:flex;
+      justify-content:center;
+      padding: calc(10px + var(--safeT)) 12px calc(12px + var(--safeB));
+    }
 
+    .shell{
+      width: min(520px, 100%);
+      height: 100%;
+      display:flex;
+      flex-direction:column;
+      gap: 12px;
+    }
+
+    /* Top */
     .topbar{
-      padding: 12px 12px 8px;
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      flex:0 0 auto;
-    }
-    .brand{display:flex; align-items:center; gap:10px; min-width:0;}
-    .brand img{
-      width:38px; height:38px; border-radius:14px; object-fit:contain;
-      background:#fff; border:1px solid rgba(255,255,255,0.9);
-      box-shadow: 0 10px 24px rgba(39,71,217,.20);
-      flex:0 0 auto;
-    }
-    .brand .txt{min-width:0}
-    .brand .title{
-      margin:0;
-      font-family:'Orbitron',sans-serif;
-      letter-spacing:1.4px;
-      font-size:0.95rem;
-      text-transform:uppercase;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-      line-height:1.05;
-    }
-    .brand .sub{
-      margin:2px 0 0;
-      font-size:0.82rem;
-      color:var(--muted);
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 6px 4px;
+      flex: 0 0 auto;
     }
 
-    .pill{
-      display:flex; align-items:center; gap:8px;
-      padding: 9px 10px; border-radius: 16px;
-      background: rgba(255,255,255,0.55);
-      border: 1.4px solid rgba(70,90,255,0.18);
-      box-shadow: 0 10px 36px rgba(39,71,217,.10);
-      white-space:nowrap; font-size:0.84rem; color:#233;
-      flex:0 0 auto;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width: 0;
     }
-    .pill i{color:var(--royal2)}
-    .dot{width:6px;height:6px;border-radius:99px;background:var(--green);display:inline-block}
 
-    .stage{
-      margin: 0 var(--pad) var(--pad);
-      flex:1 1 auto;
-      border-radius: var(--radius);
-      background: var(--glass);
-      border: 1.8px solid var(--glassBorder);
-      box-shadow: var(--shadow);
+    .logo{
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(255,255,255,.9);
+      box-shadow: 0 12px 30px rgba(39,71,217,.18);
+      display:flex;
+      align-items:center;
+      justify-content:center;
       overflow:hidden;
-      position:relative;
-      padding-bottom: var(--dockH);
+      flex: 0 0 auto;
+    }
+    .logo img{
+      width: 82%;
+      height: 82%;
+      object-fit: contain;
     }
 
+    .brandTxt{ min-width:0; }
+    .brandTxt .t{
+      margin:0;
+      font-family: Orbitron, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 0.98rem;
+      line-height: 1.05;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .brandTxt .s{
+      margin:3px 0 0;
+      color: var(--muted);
+      font-size: 0.86rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chip{
+      display:flex;
+      align-items:center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.70);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 14px 40px rgba(39,71,217,.10);
+      color: #1e2b4a;
+      font-size: .86rem;
+      white-space: nowrap;
+      flex: 0 0 auto;
+    }
+    .chip i{ color: var(--royal); }
+    .dot{
+      width: 8px; height: 8px;
+      border-radius: 999px;
+      background: #19b26b;
+      box-shadow: 0 0 0 4px rgba(25,178,107,.12);
+      display:inline-block;
+    }
+
+    /* Stage */
+    .stage{
+      position:relative;
+      flex: 1 1 auto;
+      border-radius: var(--r-xl);
+      background: rgba(255,255,255,.40);
+      border: 1px solid rgba(39,71,217,.12);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(18px) saturate(135%);
+      -webkit-backdrop-filter: blur(18px) saturate(135%);
+    }
+
+    /* Conteúdo rolável + reserva do dock */
     .content{
-      position:absolute;
-      top:0; left:0; right:0;
-      bottom: var(--dockH);
-      padding: 14px;
+      height: 100%;
       overflow:auto;
       -webkit-overflow-scrolling: touch;
+      padding: 18px;
+      padding-bottom: calc(18px + var(--dockH) + 14px + var(--safeB));
     }
 
     .hero{
-      border-radius: 22px;
+      border-radius: var(--r-lg);
       padding: 18px 16px;
-      background: linear-gradient(135deg, rgba(39,71,217,0.92), rgba(59,97,227,0.90));
-      color:#fff;
-      box-shadow: 0 14px 44px rgba(39,71,217,0.22);
-      display:flex; align-items:center; gap:12px;
-    }
-    .hero .hlogo{
-      width:56px; height:56px; border-radius:18px; background:#fff;
-      border:3px solid rgba(255,255,255,0.92);
-      object-fit:contain;
-      flex:0 0 auto;
-    }
-    .hero h1{margin:0; font-family:'Orbitron',sans-serif; letter-spacing:1.6px; font-size:1.05rem; text-transform:uppercase;}
-    .hero p{margin:4px 0 0; opacity:.9; font-size:.92rem}
-
-    .grid{display:grid; gap:10px; margin-top:12px;}
-    .card{
-      border-radius: 18px;
-      background: rgba(255,255,255,0.64);
-      border: 1.4px solid rgba(70,90,255,0.14);
-      box-shadow: 0 10px 30px rgba(39,71,217,0.10);
-      padding: 12px;
-      display:flex; align-items:center; justify-content:space-between; gap:12px;
-      cursor:pointer;
-      user-select:none;
-      transition: transform .12s ease, box-shadow .12s ease;
-    }
-    .card:active{transform: scale(0.995);}
-    .c-left{display:flex; align-items:center; gap:12px; min-width:0;}
-    .c-ico{
-      width:44px; height:44px; border-radius:16px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(39,71,217,0.10);
-      color: var(--royal);
-      font-size: 1.25rem;
-      flex:0 0 auto;
-    }
-    .c-txt{min-width:0}
-    .c-txt b{display:block; font-size:.92rem; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .c-txt span{display:block; font-size:.80rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .c-go{color:var(--royal); opacity:.9; font-size:1.3rem; flex:0 0 auto;}
-
-    .dock{
-      position:absolute;
-      left: var(--dockGap);
-      right: var(--dockGap);
-      bottom: calc(var(--dockGap) + env(safe-area-inset-bottom, 0px));
-      height: 62px;
-      border-radius: 22px;
-      background: rgba(255,255,255,0.58);
-      border: 1.6px solid rgba(70,90,255,0.16);
-      box-shadow: 0 14px 44px rgba(39,71,217,0.18);
+      background: linear-gradient(135deg, rgba(39,71,217,.95), rgba(59,97,227,.92));
+      color: #fff;
+      box-shadow: 0 18px 55px rgba(39,71,217,.26);
       display:flex;
       align-items:center;
-      gap:10px;
+      gap: 14px;
+    }
+    .hero .hlogo{
+      width: 58px; height: 58px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.95);
+      border: 3px solid rgba(255,255,255,.92);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex: 0 0 auto;
+      overflow:hidden;
+    }
+    .hero .hlogo img{
+      width: 82%;
+      height: 82%;
+      object-fit: contain;
+    }
+    .hero h1{
+      margin:0;
+      font-family: Orbitron, sans-serif;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+      font-size: 1.05rem;
+      line-height: 1.12;
+    }
+    .hero p{
+      margin: 6px 0 0;
+      opacity: .92;
+      font-size: .92rem;
+      line-height: 1.2;
+    }
+
+    .section{
+      margin-top: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .section .h{
+      margin:0;
+      font-size: .92rem;
+      color: #1a2440;
+      letter-spacing:.04em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .section .hint{
+      margin:0;
+      color: var(--muted);
+      font-size: .86rem;
+      white-space: nowrap;
+    }
+
+    .grid{
+      margin-top: 10px;
+      display:grid;
+      gap: 10px;
+    }
+
+    .card{
+      border-radius: var(--r-md);
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      box-shadow: 0 14px 40px rgba(39,71,217,.11);
+      padding: 14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 14px;
+      cursor:pointer;
+      user-select:none;
+      transform: translateZ(0);
+      transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+    }
+    .card:active{ transform: scale(.992); }
+
+    .left{
+      display:flex;
+      align-items:center;
+      gap: 12px;
+      min-width:0;
+    }
+
+    .ico{
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(39,71,217,.10);
+      color: var(--royal);
+      font-size: 1.25rem;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(39,71,217,.10);
+    }
+
+    .txt{
+      min-width:0;
+    }
+    .txt .b{
+      margin:0;
+      font-weight: 800;
+      font-size: .98rem;
+      letter-spacing:.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .txt .s{
+      margin:5px 0 0;
+      font-size: .88rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+
+    .go{
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(39,71,217,.08);
+      color: var(--royal);
+      flex: 0 0 auto;
+    }
+    .go i{ font-size: 1.4rem; }
+
+    /* Dock inferior FIXO dentro da stage */
+    .dock{
+      position: absolute;
+      left: 12px;
+      right: 12px;
+      bottom: calc(12px + var(--safeB));
+      height: var(--dockH);
+      border-radius: 26px;
+      background: rgba(255,255,255,.68);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 20px 60px rgba(39,71,217,.18);
+      display:flex;
+      align-items:center;
       padding: 10px;
+      gap: 10px;
       backdrop-filter: blur(18px) saturate(140%);
       -webkit-backdrop-filter: blur(18px) saturate(140%);
     }
+
     .tab{
       flex:1;
-      height:100%;
-      border-radius: 18px;
+      height: 100%;
       border:0;
+      border-radius: 20px;
       background: transparent;
-      display:flex; align-items:center; justify-content:center;
-      gap:10px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap: 10px;
       cursor:pointer;
-      color:#243;
-      user-select:none;
-      transition: background .12s ease, transform .12s ease, box-shadow .12s ease;
+      color: #1b2746;
       padding: 10px 12px;
+      transition: transform .12s ease, background .12s ease, box-shadow .12s ease, color .12s ease;
+      user-select:none;
+      min-width: 0;
     }
-    .tab .ico{
-      width:38px; height:38px; border-radius:14px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(39,71,217,0.10);
+
+    .tab .tIco{
+      width: 42px;
+      height: 42px;
+      border-radius: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: rgba(39,71,217,.10);
       color: var(--royal);
-      font-size: 1.15rem;
-      flex:0 0 auto;
+      flex: 0 0 auto;
+      box-shadow: inset 0 0 0 1px rgba(39,71,217,.10);
     }
-    .tab b{
-      font-size:.86rem; letter-spacing:.06em; text-transform:uppercase;
-      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-      max-width: 100%;
+    .tab .tIco i{ font-size: 1.15rem; }
+
+    .tab .label{
+      font-weight: 800;
+      font-size: .90rem;
+      letter-spacing:.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
+
     .tab.active{
-      background: linear-gradient(135deg, rgba(39,71,217,0.92), rgba(59,97,227,0.90));
+      background: linear-gradient(135deg, rgba(39,71,217,.95), rgba(59,97,227,.92));
       color:#fff;
-      box-shadow: 0 12px 30px rgba(39,71,217,0.34);
+      box-shadow: 0 18px 50px rgba(39,71,217,.30);
       transform: translateY(-1px);
     }
-    .tab.active .ico{background: rgba(255,255,255,0.18); color:#fff;}
+    .tab.active .tIco{
+      background: rgba(255,255,255,.18);
+      color:#fff;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+    }
 
+    /* Ajustes para telas menores */
     @media (max-width: 420px){
-      .pill{display:none;}
-      .tab b{font-size:.80rem;}
+      .chip{ display:none; }
+      .content{ padding: 16px; }
+      .tab .label{ font-size: .84rem; }
+    }
+
+    /* Ajuste fino para aparelhos com fonte grande / acessibilidade */
+    @media (max-width: 380px){
+      .tab{ gap: 8px; }
+      .tab .tIco{ width: 40px; height: 40px; }
     }
   </style>
 </head>
 
 <body>
   <div class="app">
-    <div class="topbar">
-      <div class="brand">
-        <img src="kratos-logo.png" alt="Logo Kratos System">
-        <div class="txt">
-          <p class="title">Kratos System</p>
-          <p class="sub" id="subTitle">Hub de Acesso</p>
-        </div>
-      </div>
+    <div class="shell">
 
-      <div class="pill">
-        <i class="bi bi-shield-lock-fill"></i>
-        Sessão segura
-        <span class="dot"></span>
-      </div>
-    </div>
-
-    <div class="stage">
-      <div class="content">
-        <div class="hero">
-          <img src="kratos-logo.png" class="hlogo" alt="Logo">
-          <div>
-            <h1>CoopexHub</h1>
-            <p>Toque em um ambiente para abrir em tela cheia (login funciona).</p>
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <img src="kratos-logo.png" alt="" />
+          </div>
+          <div class="brandTxt">
+            <p class="t">Kratos System</p>
+            <p class="s" id="subTitle">Hub de Acesso</p>
           </div>
         </div>
 
-        <div class="grid">
-          <div class="card" data-key="supervisao">
-            <div class="c-left">
-              <div class="c-ico"><i class="bi bi-headset"></i></div>
-              <div class="c-txt">
-                <b>Supervisão</b>
-                <span>Escalas, turnos e controle operacional.</span>
-              </div>
-            </div>
-            <div class="c-go"><i class="bi bi-arrow-right-short"></i></div>
-          </div>
-
-          <div class="card" data-key="estab">
-            <div class="c-left">
-              <div class="c-ico"><i class="bi bi-shop-window"></i></div>
-              <div class="c-txt">
-                <b>Estabelecimentos</b>
-                <span>Financeiro, lançamentos e relatórios.</span>
-              </div>
-            </div>
-            <div class="c-go"><i class="bi bi-arrow-right-short"></i></div>
-          </div>
-
-          <div class="card" data-key="parceria">
-            <div class="c-left">
-              <div class="c-ico"><i class="bi bi-people-fill"></i></div>
-              <div class="c-txt">
-                <b>Parceria</b>
-                <span>Portal de integração com o Kratos System.</span>
-              </div>
-            </div>
-            <div class="c-go"><i class="bi bi-arrow-right-short"></i></div>
-          </div>
+        <div class="chip" aria-label="Sessão segura">
+          <i class="bi bi-shield-lock-fill"></i>
+          Sessão segura
+          <span class="dot" aria-hidden="true"></span>
         </div>
       </div>
 
-      <div class="dock" role="tablist" aria-label="Ambientes">
-        <button class="tab active" type="button" data-key="supervisao">
-          <span class="ico"><i class="bi bi-headset"></i></span>
-          <b>Supervisão</b>
-        </button>
-        <button class="tab" type="button" data-key="estab">
-          <span class="ico"><i class="bi bi-shop-window"></i></span>
-          <b>Estab.</b>
-        </button>
-        <button class="tab" type="button" data-key="parceria">
-          <span class="ico"><i class="bi bi-people-fill"></i></span>
-          <b>Parceria</b>
-        </button>
+      <div class="stage" role="application" aria-label="Kratos Hub">
+        <div class="content" id="scrollArea">
+
+          <div class="hero">
+            <div class="hlogo" aria-hidden="true">
+              <img src="kratos-logo.png" alt="" />
+            </div>
+            <div>
+              <h1>CoopexHub</h1>
+              <p>Toque em um ambiente para abrir em tela cheia. Navegação otimizada para celular.</p>
+            </div>
+          </div>
+
+          <div class="section">
+            <p class="h">Ambientes</p>
+            <p class="hint" id="hint">Selecione abaixo</p>
+          </div>
+
+          <div class="grid">
+            <div class="card" data-key="supervisao" role="button" tabindex="0" aria-label="Abrir Supervisão">
+              <div class="left">
+                <div class="ico"><i class="bi bi-headset"></i></div>
+                <div class="txt">
+                  <p class="b">Supervisão</p>
+                  <p class="s">Escalas, turnos e controle operacional.</p>
+                </div>
+              </div>
+              <div class="go"><i class="bi bi-arrow-right-short"></i></div>
+            </div>
+
+            <div class="card" data-key="estab" role="button" tabindex="0" aria-label="Abrir Estabelecimentos">
+              <div class="left">
+                <div class="ico"><i class="bi bi-shop-window"></i></div>
+                <div class="txt">
+                  <p class="b">Estabelecimentos</p>
+                  <p class="s">Financeiro, lançamentos e relatórios.</p>
+                </div>
+              </div>
+              <div class="go"><i class="bi bi-arrow-right-short"></i></div>
+            </div>
+
+            <div class="card" data-key="parceria" role="button" tabindex="0" aria-label="Abrir Parceria">
+              <div class="left">
+                <div class="ico"><i class="bi bi-people-fill"></i></div>
+                <div class="txt">
+                  <p class="b">Parceria</p>
+                  <p class="s">Portal de integração com o Kratos System.</p>
+                </div>
+              </div>
+              <div class="go"><i class="bi bi-arrow-right-short"></i></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dock inferior -->
+        <div class="dock" role="tablist" aria-label="Navegação">
+          <button class="tab active" type="button" data-key="supervisao" role="tab" aria-selected="true">
+            <span class="tIco"><i class="bi bi-headset"></i></span>
+            <span class="label">Supervisão</span>
+          </button>
+
+          <button class="tab" type="button" data-key="estab" role="tab" aria-selected="false">
+            <span class="tIco"><i class="bi bi-shop-window"></i></span>
+            <span class="label">Estab.</span>
+          </button>
+
+          <button class="tab" type="button" data-key="parceria" role="tab" aria-selected="false">
+            <span class="tIco"><i class="bi bi-people-fill"></i></span>
+            <span class="label">Parceria</span>
+          </button>
+        </div>
+
       </div>
     </div>
   </div>
 
 <script>
-(function(){
+(() => {
   const APPS = {
     supervisao: "https://escalas-2-1.onrender.com/",
-    estab: "https://financas-dxsu.onrender.com/",
-    parceria: "https://kratossystem.onrender.com/login"
+    estab:      "https://financas-dxsu.onrender.com/",
+    parceria:   "https://kratossystem.onrender.com/login"
   };
 
-  const tabs = Array.from(document.querySelectorAll(".tab"));
-  const cards = Array.from(document.querySelectorAll(".card"));
+  const tabs  = [...document.querySelectorAll(".tab")];
+  const cards = [...document.querySelectorAll(".card")];
   const subTitle = document.getElementById("subTitle");
+  const hint = document.getElementById("hint");
+
+  function labelFor(key){
+    return key === "supervisao" ? "Supervisão" : (key === "estab" ? "Estabelecimentos" : "Parceria");
+  }
 
   function setActive(key){
-    tabs.forEach(t => t.classList.toggle("active", t.dataset.key === key));
-    const label = key === "supervisao" ? "Supervisão" : key === "estab" ? "Estabelecimentos" : "Parceria";
-    subTitle.textContent = label + " · Toque para abrir";
+    tabs.forEach(t => {
+      const active = t.dataset.key === key;
+      t.classList.toggle("active", active);
+      t.setAttribute("aria-selected", active ? "true" : "false");
+    });
+
+    const lab = labelFor(key);
+    subTitle.textContent = lab + " · Toque para abrir";
+    hint.textContent = "Selecionado: " + lab;
+
     localStorage.setItem("hub_last", key);
   }
 
   function openApp(key){
+    if (!APPS[key]) return;
     setActive(key);
+    // abre no mesmo contexto (TWA) para parecer app
     window.location.href = APPS[key];
   }
 
-  tabs.forEach(t => t.addEventListener("click", () => openApp(t.dataset.key)));
-  cards.forEach(c => c.addEventListener("click", () => openApp(c.dataset.key)));
+  function bindClick(el){
+    el.addEventListener("click", () => openApp(el.dataset.key));
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openApp(el.dataset.key);
+      }
+    });
+  }
+
+  tabs.forEach(bindClick);
+  cards.forEach(bindClick);
 
   const last = localStorage.getItem("hub_last");
   if (last && APPS[last]) setActive(last);
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
   }
 })();
 </script>
