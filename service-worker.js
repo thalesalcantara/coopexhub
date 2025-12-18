@@ -1,54 +1,30 @@
-const CACHE_NAME = "kratos-hub-v2";
+const CACHE = "kratos-hub-v1";
 const ASSETS = [
   "./",
   "./index.html",
-  "./manifest.webmanifest",
-  "./service-worker.js",
+  "./kratos-logo.png",
   "./icon-192.png",
   "./icon-512.png",
-  "./kratos-logo.png"
+  "./icon-512-maskable.png",
+  "./manifest.webmanifest"
 ];
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", (e) => {
+  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).catch(() => {})
+});
+
+self.addEventListener("activate", (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((k) => (k === CACHE ? null : caches.delete(k))))
+    )
   );
+  self.clients.claim();
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil((async () => {
-    const keys = await caches.keys();
-    await Promise.all(keys.map(k => (k !== CACHE_NAME ? caches.delete(k) : Promise.resolve())));
-    await self.clients.claim();
-  })());
-});
-
-self.addEventListener("fetch", (event) => {
-  const req = event.request;
-
-  // Navegação: tenta rede primeiro, fallback para cache
-  if (req.mode === "navigate") {
-    event.respondWith((async () => {
-      try {
-        const fresh = await fetch(req);
-        const cache = await caches.open(CACHE_NAME);
-        cache.put("./index.html", fresh.clone()).catch(() => {});
-        return fresh;
-      } catch (e) {
-        return (await caches.match("./index.html")) || Response.error();
-      }
-    })());
-    return;
-  }
-
-  // Assets: cache-first
-  event.respondWith((async () => {
-    const cached = await caches.match(req);
-    if (cached) return cached;
-    const fresh = await fetch(req);
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(req, fresh.clone()).catch(() => {});
-    return fresh;
-  })());
+self.addEventListener("fetch", (e) => {
+  const url = new URL(e.request.url);
+  if (url.origin !== location.origin) return;
+  e.respondWith(caches.match(e.request).then((cached) => cached || fetch(e.request)));
 });

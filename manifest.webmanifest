@@ -1,14 +1,29 @@
 {
-  "name": "Kratos System · Hub",
-  "short_name": "Kratos Hub",
-  "start_url": "./index.html#hub",
+  "name": "Kratos System Hub",
+  "short_name": "KratosHub",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f4f7ff",
+  "background_color": "#F4F7FF",
   "theme_color": "#2747d9",
-  "orientation": "portrait",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

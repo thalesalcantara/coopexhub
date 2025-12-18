@@ -2,499 +2,326 @@
 <html lang="pt-br" data-bs-theme="light">
 <head>
   <meta charset="utf-8">
-  <title>Kratos System · App Hub</title>
+  <title>Kratos System · Hub</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#2747d9">
-
-  <!-- iOS PWA -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Kratos Hub">
-
-  <!-- PWA -->
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="icon" href="icon-192.png">
+  <link rel="icon" href="icon-192.png" sizes="192x192">
   <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-  <!-- Fontes & Bootstrap -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
-    :root {
-      --royal: #2747d9;
-      --royal-2: #3b61e3;
-      --glass: rgba(255,255,255,0.32);
-      --glass-border: rgba(70,90,255,0.13);
-      --shadow: 0 6px 36px 0 rgba(39,71,217,0.13);
-      --green: #23bb75;
-
-      --tab-h: 72px;
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-top: env(safe-area-inset-top, 0px);
+    :root{
+      --royal:#2747d9; --royal2:#3b61e3;
+      --bg1:#f2f6ff; --bg2:#d2e1ff;
+      --glass: rgba(255,255,255,0.36);
+      --glassBorder: rgba(70,90,255,0.16);
+      --shadow: 0 10px 46px rgba(39,71,217,0.18);
+      --green:#23bb75; --ink:#0b1220; --muted:#5b6478;
+      --radius: 26px;
+      --dockH: calc(76px + env(safe-area-inset-bottom, 0px));
+      --pad: 12px;
+      --dockGap: 10px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      height:100dvh;
+      font-family:'Roboto',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+      background:
+        radial-gradient(900px 500px at 20% 10%, #ffffff 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(120deg, var(--bg1) 0%, var(--bg2) 100%);
+      color:var(--ink);
+      overflow:hidden;
     }
 
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      background: linear-gradient(120deg, #f2f6ff 0%, #d2e1ff 100%);
-      font-family: 'Roboto', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      overflow: hidden; /* sensação de app */
-    }
+    .app{height:100dvh; width:100vw; display:flex; flex-direction:column;}
 
-    .app-shell{
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      padding-top: var(--safe-top);
-    }
-
-    .app-views{
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      padding-bottom: calc(var(--tab-h) + var(--safe-bottom));
-    }
-
-    .view{
-      position: absolute;
-      inset: 0;
-      display: none;
-      overflow: hidden;
-    }
-    .view.active{ display: block; }
-
-    .view iframe{
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      background: #fff;
-    }
-
-    /* HUB (seu card original) */
-    .login-wrap {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 18px 12px;
-      overflow: auto;
-    }
-
-    .glass-card {
-      max-width: 410px;
-      width: 98vw;
-      border-radius: 24px;
-      background: var(--glass);
-      backdrop-filter: blur(22px) saturate(130%);
-      -webkit-backdrop-filter: blur(22px) saturate(130%);
-      border: 1.8px solid var(--glass-border);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .card-top {
-      background: linear-gradient(135deg, var(--royal), var(--royal-2));
-      color: #fff;
-      text-align: center;
-      padding: 38px 24px 30px 24px;
-      border-bottom-left-radius: 50% 26px;
-      border-bottom-right-radius: 50% 26px;
-      box-shadow: 0 8px 22px 0 #2747d91b;
-    }
-
-    .brand { display:flex; flex-direction:column; align-items:center; gap:8px; }
-
-    .brand-logo {
-      width: 92px; height: 92px; border-radius: 50%;
-      object-fit: contain; border: 4px solid #fff; background:#fff;
-      box-shadow: 0 3px 24px 0 #2747d950;
-    }
-
-    .brand-title {
-      font-family: 'Orbitron', sans-serif;
-      font-size: 1.23rem;
-      letter-spacing: 2px;
-      font-weight: 600;
-      text-shadow: 0 2px 18px #13246e30;
-      margin-bottom: 0px;
-      text-transform: uppercase;
-    }
-
-    .credentials-vault {
-      margin: 16px auto 0 auto;
-      width: 82%;
-      min-height: 54px;
-      background: rgba(255,255,255,0.44);
-      border: 2px solid var(--royal-2);
-      border-radius: 16px;
-      box-shadow: 0 3px 24px 0 #3b61e325;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 10px 16px 10px 14px;
-    }
-
-    .vault-icon { font-size: 1.5rem; color: var(--royal-2); opacity: .75; }
-    .vault-text { font-size: 1.08rem; color: #234; font-weight: 500; display:flex; flex-direction:column; line-height:1.2; }
-    .vault-mini { font-size: .92rem; color: #456; opacity: .78; font-weight: 400; }
-    .small-note { font-size: .96rem; color: #e6ecfa; opacity: .91; margin-top: 4px; }
-
-    .card-body {
-      padding: 30px 28px 22px 28px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .role-info {
-      font-size: .99rem;
-      color: var(--green);
-      background: #e8fcf2;
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-top: 12px;
-      font-weight: 600;
-      box-shadow: 0 1px 8px #23bb750a;
-      text-align: left;
-    }
-
-    .hub-links { margin-top: 18px; display:flex; flex-direction:column; gap:10px; }
-
-    .hub-btn {
+    .topbar{
+      padding: 12px 12px 8px;
       display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding: 11px 14px;
-      border-radius: 12px;
-      color:#fff; text-decoration:none;
-      font-weight: 600;
-      font-size: 0.94rem;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      background: linear-gradient(135deg, var(--royal), var(--royal-2));
-      box-shadow: 0 6px 20px #3b61e333;
-      transition: transform 0.12s ease-out, box-shadow 0.12s ease-out;
+      flex:0 0 auto;
     }
-    .hub-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 26px #2747d955; }
-
-    .hub-icon {
-      width: 34px; height: 34px; border-radius: 10px;
-      background: rgba(255,255,255,0.16);
-      display:flex; align-items:center; justify-content:center;
-      flex-shrink:0;
-      font-size: 1.1rem;
+    .brand{display:flex; align-items:center; gap:10px; min-width:0;}
+    .brand img{
+      width:38px; height:38px; border-radius:14px; object-fit:contain;
+      background:#fff; border:1px solid rgba(255,255,255,0.9);
+      box-shadow: 0 10px 24px rgba(39,71,217,.20);
+      flex:0 0 auto;
     }
-    .hub-text { flex:1; display:flex; flex-direction:column; line-height:1.2; text-align:left; }
-    .hub-label { font-size: 0.88rem; }
-    .hub-mini { font-size: 0.72rem; text-transform:none; letter-spacing: normal; opacity:.96; }
-    .hub-arrow { font-size: 1rem; opacity: .92; }
-
-    .marca-sistema{
-      color:#1a1a1a;
-      text-align:center;
-      margin: 16px auto 8px auto;
-      font-size: 1.04rem;
-      font-weight: 500;
-      opacity: .96;
-      user-select:none;
+    .brand .txt{min-width:0}
+    .brand .title{
+      margin:0;
+      font-family:'Orbitron',sans-serif;
+      letter-spacing:1.4px;
+      font-size:0.95rem;
+      text-transform:uppercase;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      line-height:1.05;
+    }
+    .brand .sub{
+      margin:2px 0 0;
+      font-size:0.82rem;
+      color:var(--muted);
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
 
-    @media (max-width: 550px) {
-      .brand-logo { width: 70px; height: 70px; }
-      .credentials-vault { width: 98%; padding: 8px 8px; }
-      .marca-sistema { font-size: 0.97rem; }
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      padding: 9px 10px; border-radius: 16px;
+      background: rgba(255,255,255,0.55);
+      border: 1.4px solid rgba(70,90,255,0.18);
+      box-shadow: 0 10px 36px rgba(39,71,217,.10);
+      white-space:nowrap; font-size:0.84rem; color:#233;
+      flex:0 0 auto;
     }
+    .pill i{color:var(--royal2)}
+    .dot{width:6px;height:6px;border-radius:99px;background:var(--green);display:inline-block}
 
-    /* Bottom Tabs */
-    .tabs{
-      position: fixed;
-      left: 0; right: 0; bottom: 0;
-      height: var(--tab-h);
-      padding-bottom: var(--safe-bottom);
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      align-items: center;
-      background: rgba(255,255,255,0.62);
-      backdrop-filter: blur(18px) saturate(130%);
-      -webkit-backdrop-filter: blur(18px) saturate(130%);
-      border-top: 1px solid rgba(70,90,255,0.16);
-      box-shadow: 0 -10px 28px rgba(39,71,217,0.10);
-      z-index: 9999;
-    }
-
-    .tab-btn{
-      height: calc(var(--tab-h) - 8px);
-      margin: 4px 4px 0 4px;
-      border-radius: 14px;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
-      color:#234;
-      border:1px solid transparent;
-      transition: transform .12s ease-out, background .12s ease-out, border-color .12s ease-out;
-      user-select:none;
-      -webkit-tap-highlight-color: transparent;
-      font-weight: 700;
-      font-size: .70rem;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }
-    .tab-btn i{ font-size:1.15rem; margin-bottom:2px; opacity:.86; }
-    .tab-btn.active{
-      background: linear-gradient(135deg, rgba(39,71,217,0.14), rgba(59,97,227,0.10));
-      border-color: rgba(39,71,217,0.20);
-      transform: translateY(-1px);
-      color:#1d3bb0;
-    }
-    .tab-btn.active i{ opacity:1; }
-
-    /* fallback se iframe for bloqueado */
-    .frame-blocked{
-      height: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 22px;
-    }
-    .blocked-card{
-      max-width: 520px;
-      width: 100%;
-      border-radius: 18px;
-      background: rgba(255,255,255,0.70);
-      border: 1px solid rgba(70,90,255,0.18);
+    .stage{
+      margin: 0 var(--pad) var(--pad);
+      flex:1 1 auto;
+      border-radius: var(--radius);
+      background: var(--glass);
+      border: 1.8px solid var(--glassBorder);
       box-shadow: var(--shadow);
-      padding: 18px 18px 16px 18px;
+      overflow:hidden;
+      position:relative;
+      padding-bottom: var(--dockH);
+    }
+
+    .content{
+      position:absolute;
+      top:0; left:0; right:0;
+      bottom: var(--dockH);
+      padding: 14px;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero{
+      border-radius: 22px;
+      padding: 18px 16px;
+      background: linear-gradient(135deg, rgba(39,71,217,0.92), rgba(59,97,227,0.90));
+      color:#fff;
+      box-shadow: 0 14px 44px rgba(39,71,217,0.22);
+      display:flex; align-items:center; gap:12px;
+    }
+    .hero .hlogo{
+      width:56px; height:56px; border-radius:18px; background:#fff;
+      border:3px solid rgba(255,255,255,0.92);
+      object-fit:contain;
+      flex:0 0 auto;
+    }
+    .hero h1{margin:0; font-family:'Orbitron',sans-serif; letter-spacing:1.6px; font-size:1.05rem; text-transform:uppercase;}
+    .hero p{margin:4px 0 0; opacity:.9; font-size:.92rem}
+
+    .grid{display:grid; gap:10px; margin-top:12px;}
+    .card{
+      border-radius: 18px;
+      background: rgba(255,255,255,0.64);
+      border: 1.4px solid rgba(70,90,255,0.14);
+      box-shadow: 0 10px 30px rgba(39,71,217,0.10);
+      padding: 12px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      cursor:pointer;
+      user-select:none;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .card:active{transform: scale(0.995);}
+    .c-left{display:flex; align-items:center; gap:12px; min-width:0;}
+    .c-ico{
+      width:44px; height:44px; border-radius:16px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(39,71,217,0.10);
+      color: var(--royal);
+      font-size: 1.25rem;
+      flex:0 0 auto;
+    }
+    .c-txt{min-width:0}
+    .c-txt b{display:block; font-size:.92rem; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .c-txt span{display:block; font-size:.80rem; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .c-go{color:var(--royal); opacity:.9; font-size:1.3rem; flex:0 0 auto;}
+
+    .dock{
+      position:absolute;
+      left: var(--dockGap);
+      right: var(--dockGap);
+      bottom: calc(var(--dockGap) + env(safe-area-inset-bottom, 0px));
+      height: 62px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.58);
+      border: 1.6px solid rgba(70,90,255,0.16);
+      box-shadow: 0 14px 44px rgba(39,71,217,0.18);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px;
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+    }
+    .tab{
+      flex:1;
+      height:100%;
+      border-radius: 18px;
+      border:0;
+      background: transparent;
+      display:flex; align-items:center; justify-content:center;
+      gap:10px;
+      cursor:pointer;
+      color:#243;
+      user-select:none;
+      transition: background .12s ease, transform .12s ease, box-shadow .12s ease;
+      padding: 10px 12px;
+    }
+    .tab .ico{
+      width:38px; height:38px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(39,71,217,0.10);
+      color: var(--royal);
+      font-size: 1.15rem;
+      flex:0 0 auto;
+    }
+    .tab b{
+      font-size:.86rem; letter-spacing:.06em; text-transform:uppercase;
+      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+      max-width: 100%;
+    }
+    .tab.active{
+      background: linear-gradient(135deg, rgba(39,71,217,0.92), rgba(59,97,227,0.90));
+      color:#fff;
+      box-shadow: 0 12px 30px rgba(39,71,217,0.34);
+      transform: translateY(-1px);
+    }
+    .tab.active .ico{background: rgba(255,255,255,0.18); color:#fff;}
+
+    @media (max-width: 420px){
+      .pill{display:none;}
+      .tab b{font-size:.80rem;}
     }
   </style>
 </head>
 
 <body>
-  <div class="app-shell">
-    <main class="app-views">
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <img src="kratos-logo.png" alt="Logo Kratos System">
+        <div class="txt">
+          <p class="title">Kratos System</p>
+          <p class="sub" id="subTitle">Hub de Acesso</p>
+        </div>
+      </div>
 
-      <!-- HUB -->
-      <section class="view active" id="view-hub" data-tab="hub">
-        <div class="login-wrap">
-          <div class="glass-card">
-            <div class="card-top">
-              <div class="brand">
-                <img src="kratos-logo.png" class="brand-logo" alt="Logo Kratos System">
-                <div class="brand-title">Kratos System</div>
-              </div>
+      <div class="pill">
+        <i class="bi bi-shield-lock-fill"></i>
+        Sessão segura
+        <span class="dot"></span>
+      </div>
+    </div>
 
-              <div class="credentials-vault">
-                <span class="vault-icon"><i class="bi bi-shield-lock-fill"></i></span>
-                <span class="vault-text">
-                  Acesso centralizado e seguro
-                  <span class="vault-mini">Troque de aba a qualquer momento</span>
-                </span>
-              </div>
-              <div class="small-note"><b>Modo App</b> (PWA)</div>
-            </div>
-
-            <div class="card-body">
-              <div class="role-info">
-                <i class="bi bi-info-circle-fill"></i>
-                &nbsp;Ambientes disponíveis para <b>Supervisão</b>, <b>Estabelecimentos</b> e <b>Parcerias</b>.
-              </div>
-
-              <div class="hub-links">
-                <a class="hub-btn" href="#supervisao" data-go="supervisao">
-                  <div class="hub-icon"><i class="bi bi-headset"></i></div>
-                  <div class="hub-text">
-                    <span class="hub-label">Supervisão</span>
-                    <span class="hub-mini">Escalas, turnos e controle operacional.</span>
-                  </div>
-                  <div class="hub-arrow"><i class="bi bi-arrow-right-short"></i></div>
-                </a>
-
-                <a class="hub-btn" href="#estabelecimentos" data-go="estabelecimentos">
-                  <div class="hub-icon"><i class="bi bi-shop-window"></i></div>
-                  <div class="hub-text">
-                    <span class="hub-label">Estabelecimentos</span>
-                    <span class="hub-mini">Financeiro, lançamentos e relatórios.</span>
-                  </div>
-                  <div class="hub-arrow"><i class="bi bi-arrow-right-short"></i></div>
-                </a>
-
-                <a class="hub-btn" href="#parceria" data-go="parceria">
-                  <div class="hub-icon"><i class="bi bi-people-fill"></i></div>
-                  <div class="hub-text">
-                    <span class="hub-label">Parceria</span>
-                    <span class="hub-mini">Portal de integração com o Kratos System.</span>
-                  </div>
-                  <div class="hub-arrow"><i class="bi bi-arrow-right-short"></i></div>
-                </a>
-              </div>
-
-              <div class="marca-sistema">
-                © 2025 App Hub — Kratos System · Coopex
-              </div>
-            </div>
+    <div class="stage">
+      <div class="content">
+        <div class="hero">
+          <img src="kratos-logo.png" class="hlogo" alt="Logo">
+          <div>
+            <h1>CoopexHub</h1>
+            <p>Toque em um ambiente para abrir em tela cheia (login funciona).</p>
           </div>
         </div>
-      </section>
 
-      <!-- VIEWS com URL -->
-      <section class="view" id="view-supervisao" data-tab="supervisao" data-url="https://escalas-2-1.onrender.com/"></section>
-      <section class="view" id="view-estabelecimentos" data-tab="estabelecimentos" data-url="https://financas-dxsu.onrender.com/"></section>
-      <section class="view" id="view-parceria" data-tab="parceria" data-url="https://kratossystem.onrender.com/login"></section>
+        <div class="grid">
+          <div class="card" data-key="supervisao">
+            <div class="c-left">
+              <div class="c-ico"><i class="bi bi-headset"></i></div>
+              <div class="c-txt">
+                <b>Supervisão</b>
+                <span>Escalas, turnos e controle operacional.</span>
+              </div>
+            </div>
+            <div class="c-go"><i class="bi bi-arrow-right-short"></i></div>
+          </div>
 
-    </main>
+          <div class="card" data-key="estab">
+            <div class="c-left">
+              <div class="c-ico"><i class="bi bi-shop-window"></i></div>
+              <div class="c-txt">
+                <b>Estabelecimentos</b>
+                <span>Financeiro, lançamentos e relatórios.</span>
+              </div>
+            </div>
+            <div class="c-go"><i class="bi bi-arrow-right-short"></i></div>
+          </div>
 
-    <!-- Abas fixas -->
-    <nav class="tabs" aria-label="Abas do Kratos Hub">
-      <a class="tab-btn active" href="#hub" data-tab-btn="hub" role="button" aria-label="Hub">
-        <i class="bi bi-grid-1x2-fill"></i><span>Hub</span>
-      </a>
-      <a class="tab-btn" href="#supervisao" data-tab-btn="supervisao" role="button" aria-label="Supervisão">
-        <i class="bi bi-headset"></i><span>Supervisão</span>
-      </a>
-      <a class="tab-btn" href="#estabelecimentos" data-tab-btn="estabelecimentos" role="button" aria-label="Estabelecimentos">
-        <i class="bi bi-shop-window"></i><span>Estab.</span>
-      </a>
-      <a class="tab-btn" href="#parceria" data-tab-btn="parceria" role="button" aria-label="Parceria">
-        <i class="bi bi-people-fill"></i><span>Parceria</span>
-      </a>
-    </nav>
+          <div class="card" data-key="parceria">
+            <div class="c-left">
+              <div class="c-ico"><i class="bi bi-people-fill"></i></div>
+              <div class="c-txt">
+                <b>Parceria</b>
+                <span>Portal de integração com o Kratos System.</span>
+              </div>
+            </div>
+            <div class="c-go"><i class="bi bi-arrow-right-short"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dock" role="tablist" aria-label="Ambientes">
+        <button class="tab active" type="button" data-key="supervisao">
+          <span class="ico"><i class="bi bi-headset"></i></span>
+          <b>Supervisão</b>
+        </button>
+        <button class="tab" type="button" data-key="estab">
+          <span class="ico"><i class="bi bi-shop-window"></i></span>
+          <b>Estab.</b>
+        </button>
+        <button class="tab" type="button" data-key="parceria">
+          <span class="ico"><i class="bi bi-people-fill"></i></span>
+          <b>Parceria</b>
+        </button>
+      </div>
+    </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){
+  const APPS = {
+    supervisao: "https://escalas-2-1.onrender.com/",
+    estab: "https://financas-dxsu.onrender.com/",
+    parceria: "https://kratossystem.onrender.com/login"
+  };
 
-  <script>
-    // Tabs + iframes persistentes (sem precisar app.js separado)
-    (() => {
-      const TAB_IDS = ["hub", "supervisao", "estabelecimentos", "parceria"];
+  const tabs = Array.from(document.querySelectorAll(".tab"));
+  const cards = Array.from(document.querySelectorAll(".card"));
+  const subTitle = document.getElementById("subTitle");
 
-      const views = {
-        hub: document.getElementById("view-hub"),
-        supervisao: document.getElementById("view-supervisao"),
-        estabelecimentos: document.getElementById("view-estabelecimentos"),
-        parceria: document.getElementById("view-parceria"),
-      };
+  function setActive(key){
+    tabs.forEach(t => t.classList.toggle("active", t.dataset.key === key));
+    const label = key === "supervisao" ? "Supervisão" : key === "estab" ? "Estabelecimentos" : "Parceria";
+    subTitle.textContent = label + " · Toque para abrir";
+    localStorage.setItem("hub_last", key);
+  }
 
-      const tabButtons = [...document.querySelectorAll("[data-tab-btn]")];
+  function openApp(key){
+    setActive(key);
+    window.location.href = APPS[key];
+  }
 
-      function setActiveTab(tabId, push = true){
-        if(!TAB_IDS.includes(tabId)) tabId = "hub";
+  tabs.forEach(t => t.addEventListener("click", () => openApp(t.dataset.key)));
+  cards.forEach(c => c.addEventListener("click", () => openApp(c.dataset.key)));
 
-        Object.entries(views).forEach(([id, el]) => {
-          el.classList.toggle("active", id === tabId);
-        });
+  const last = localStorage.getItem("hub_last");
+  if (last && APPS[last]) setActive(last);
 
-        tabButtons.forEach(btn => {
-          btn.classList.toggle("active", btn.getAttribute("data-tab-btn") === tabId);
-        });
-
-        if(tabId !== "hub"){
-          ensureIframe(tabId);
-        }
-
-        const newHash = "#" + tabId;
-        if(push && location.hash !== newHash){
-          history.pushState({tabId}, "", newHash);
-        }
-      }
-
-      function ensureIframe(tabId){
-        const view = views[tabId];
-        if(!view) return;
-        if(view.querySelector("iframe")) return;
-
-        const url = view.getAttribute("data-url");
-        if(!url) return;
-
-        const iframe = document.createElement("iframe");
-        iframe.src = url;
-        iframe.loading = "eager";
-        iframe.referrerPolicy = "no-referrer-when-downgrade";
-        iframe.allow = "clipboard-read; clipboard-write; fullscreen; geolocation; camera; microphone";
-        view.appendChild(iframe);
-
-        // fallback (se bloquear iframe)
-        const t = setTimeout(() => {
-          if(!view.classList.contains("active")) return;
-          showBlockedFallback(view, url);
-        }, 6000);
-
-        iframe.addEventListener("load", () => {
-          clearTimeout(t);
-          const fb = view.querySelector("[data-blocked]");
-          if(fb) fb.remove();
-        });
-      }
-
-      function showBlockedFallback(view, url){
-        if(view.querySelector("[data-blocked]")) return;
-
-        const wrapper = document.createElement("div");
-        wrapper.className = "frame-blocked";
-        wrapper.setAttribute("data-blocked", "1");
-        wrapper.innerHTML = `
-          <div class="blocked-card">
-            <div class="d-flex align-items-center gap-2 mb-2">
-              <i class="bi bi-shield-exclamation" style="font-size:1.2rem;color:#1d3bb0;"></i>
-              <div style="font-weight:800;color:#1d3bb0;">Este sistema pode ter bloqueado abrir dentro do Hub.</div>
-            </div>
-            <div style="color:#345; font-weight:600; font-size:.95rem; line-height:1.35;">
-              Alguns sites bloqueiam iframe por segurança (CSP/X-Frame-Options).
-              Se acontecer, use “Abrir direto”.
-            </div>
-            <div class="d-flex gap-2 mt-3">
-              <a class="btn btn-primary" style="background:#2747d9;border:0;" target="_blank" rel="noopener" href="${url}">
-                Abrir direto
-              </a>
-              <button class="btn btn-outline-primary" style="border-color:#2747d9;color:#2747d9;" type="button" id="retryFrame">
-                Tentar novamente
-              </button>
-            </div>
-          </div>
-        `;
-        view.appendChild(wrapper);
-
-        wrapper.querySelector("#retryFrame")?.addEventListener("click", () => {
-          const iframe = view.querySelector("iframe");
-          if(iframe) iframe.src = iframe.src;
-          wrapper.remove();
-        });
-      }
-
-      // Botões do Hub
-      document.querySelectorAll("[data-go]").forEach(a => {
-        a.addEventListener("click", (e) => {
-          e.preventDefault();
-          setActiveTab(a.getAttribute("data-go"), true);
-        });
-      });
-
-      // Botões das tabs
-      tabButtons.forEach(btn => {
-        btn.addEventListener("click", (e) => {
-          e.preventDefault();
-          setActiveTab(btn.getAttribute("data-tab-btn"), true);
-        });
-      });
-
-      window.addEventListener("popstate", () => {
-        setActiveTab((location.hash || "#hub").replace("#",""), false);
-      });
-
-      setActiveTab((location.hash || "#hub").replace("#",""), false);
-
-      // Service worker
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => navigator.serviceWorker.register("./service-worker.js"));
-      }
-    })();
-  </script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+  }
+})();
+</script>
 </body>
 </html>
