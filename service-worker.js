@@ -1,5 +1,4 @@
-/* service-worker.js */
-const CACHE = "kratos-hub-v4"; // MUDE para v5, v6... a cada atualização no GitHub
+const CACHE = "kratos-hub-v10"; // aumente: v11, v12...
 
 const ASSETS = [
   "./",
@@ -27,29 +26,18 @@ self.addEventListener("activate", (e) => {
   );
 });
 
-/* permite ativar a versão nova imediatamente */
-self.addEventListener("message", (e) => {
-  if (e.data && e.data.type === "SKIP_WAITING") self.skipWaiting();
-});
-
-/* Cache-first somente do mesmo domínio (Hub). Render/onrender é cross-origin e não é cacheado aqui. */
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
-
-  // Só intercepta requests do próprio Hub (GitHub Pages / domínio do Hub)
   if (url.origin !== self.location.origin) return;
 
   e.respondWith(
     caches.match(e.request).then((cached) => {
       if (cached) return cached;
-
-      return fetch(e.request)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(e.request, copy));
-          return res;
-        })
-        .catch(() => caches.match("./offline.html"));
+      return fetch(e.request).then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(e.request, copy));
+        return res;
+      });
     })
   );
 });
