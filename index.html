@@ -24,6 +24,8 @@
     :root{
       --royal:#2747d9;
       --royal2:#3b61e3;
+      --green:#19b26b;
+
       --ink:#0b1220;
       --muted:#5c667a;
 
@@ -33,7 +35,10 @@
       --stroke: rgba(39,71,217,.14);
       --shadow: 0 18px 55px rgba(39,71,217,.16);
 
-      --r-xl: 28px;
+      --r-xxl: 30px;
+      --r-xl: 24px;
+      --r-lg: 18px;
+
       --safeB: env(safe-area-inset-bottom, 0px);
       --safeT: env(safe-area-inset-top, 0px);
     }
@@ -55,29 +60,40 @@
       touch-action: manipulation;
     }
 
+    /* App container full-screen real */
     .app{
       height:100dvh;
       width:100%;
       display:flex;
       justify-content:center;
-      padding: calc(10px + var(--safeT)) 12px calc(12px + var(--safeB));
+      padding: 0;
     }
+
     .shell{
-      width: min(560px, 100%);
+      width: 100%;
+      max-width: 720px;
       height:100%;
       display:flex;
       flex-direction:column;
-      gap: 12px;
+      background: transparent;
+      position:relative;
     }
 
+    /* Topbar sempre fixa (nativa) */
     .topbar{
+      position:sticky;
+      top: 0;
+      z-index: 80;
+      padding: calc(10px + var(--safeT)) 14px 10px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap: 10px;
-      padding: 4px 4px;
-      flex: 0 0 auto;
-      min-height: 54px;
+      background:
+        linear-gradient(180deg, rgba(245,248,255,.92), rgba(245,248,255,.55));
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-bottom: 1px solid rgba(39,71,217,.10);
     }
 
     .brand{
@@ -86,6 +102,7 @@
       gap: 12px;
       min-width: 0;
     }
+
     .logo{
       width: 44px;
       height: 44px;
@@ -135,7 +152,7 @@
       gap: 8px;
       padding: 10px 12px;
       border-radius: 999px;
-      background: rgba(255,255,255,.72);
+      background: rgba(255,255,255,.78);
       border: 1px solid rgba(39,71,217,.14);
       box-shadow: 0 14px 40px rgba(39,71,217,.10);
       color: #1e2b4a;
@@ -146,7 +163,7 @@
     .dot{
       width: 8px; height: 8px;
       border-radius: 999px;
-      background: #19b26b;
+      background: var(--green);
       box-shadow: 0 0 0 4px rgba(25,178,107,.12);
       display:inline-block;
     }
@@ -156,7 +173,7 @@
       height: 44px;
       border-radius: 16px;
       border: 1px solid rgba(39,71,217,.14);
-      background: rgba(255,255,255,.72);
+      background: rgba(255,255,255,.78);
       box-shadow: 0 14px 40px rgba(39,71,217,.10);
       display:flex;
       align-items:center;
@@ -167,43 +184,64 @@
     .kebab:active{ transform: scale(.98); }
     .kebab i{ font-size: 1.25rem; color: var(--royal); }
 
+    /* Área principal */
     .stage{
       position:relative;
       flex: 1 1 auto;
-      border-radius: var(--r-xl);
-      background: rgba(255,255,255,.42);
+      margin: 12px 12px 0;
+      border-radius: var(--r-xxl);
+      background: rgba(255,255,255,.45);
       border: 1px solid rgba(39,71,217,.12);
       box-shadow: var(--shadow);
       overflow:hidden;
       backdrop-filter: blur(18px) saturate(135%);
       -webkit-backdrop-filter: blur(18px) saturate(135%);
+      min-height: 0;
     }
 
-    /* Tabs top (estilo app) */
-    .tabsBar{
+    /* Conteúdo: iframe ocupa tudo, com “borda” interna discreta */
+    .frameWrap{
       position:absolute;
-      left: 12px;
-      right: 12px;
-      top: 12px;
-      z-index: 10;
-      padding: 10px;
-      border-radius: 24px;
-      background: rgba(255,255,255,.70);
-      border: 1px solid rgba(39,71,217,.14);
-      box-shadow: 0 20px 60px rgba(39,71,217,.16);
-      backdrop-filter: blur(18px) saturate(140%);
-      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      inset: 0;
+      padding: 0;
+    }
+
+    iframe{
+      width:100%;
+      height:100%;
+      border:0;
+      background:#fff;
+    }
+
+    /* Bottom nav estilo app */
+    .bottomNav{
+      position:sticky;
+      bottom: 0;
+      z-index: 70;
+      padding: 10px 12px calc(10px + var(--safeB));
+      background:
+        linear-gradient(0deg, rgba(245,248,255,.92), rgba(245,248,255,.55));
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-top: 1px solid rgba(39,71,217,.10);
+    }
+
+    .navBar{
       display:flex;
       gap: 10px;
-      align-items:center;
+      background: rgba(255,255,255,.78);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 18px 60px rgba(39,71,217,.14);
+      border-radius: 22px;
+      padding: 8px;
     }
 
-    .tab{
-      flex: 1;
-      border: 0;
-      border-radius: 20px;
-      background: transparent;
+    .navBtn{
+      flex:1;
       height: 56px;
+      border:0;
+      border-radius: 18px;
+      background: transparent;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -212,57 +250,40 @@
       user-select:none;
       color: #1b2746;
       transition: transform .12s ease, background .12s ease, box-shadow .12s ease, color .12s ease;
-      min-width: 0;
+      min-width:0;
+      font-weight: 800;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      font-size: .86rem;
     }
-    .tab:active{ transform: scale(.99); }
+    .navBtn:active{ transform: scale(.99); }
 
-    .tIco{
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
+    .nIco{
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
       display:flex;
       align-items:center;
       justify-content:center;
       background: rgba(39,71,217,.10);
       color: var(--royal);
-      flex: 0 0 auto;
       box-shadow: inset 0 0 0 1px rgba(39,71,217,.10);
+      flex: 0 0 auto;
     }
-    .tIco i{ font-size: 1.12rem; }
+    .nIco i{ font-size: 1.08rem; }
 
-    .label{
-      font-weight: 900;
-      font-size: .90rem;
-      letter-spacing:.05em;
-      text-transform: uppercase;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .tab.active{
+    .navBtn.active{
       background: linear-gradient(135deg, rgba(39,71,217,.95), rgba(59,97,227,.92));
       color:#fff;
       box-shadow: 0 18px 50px rgba(39,71,217,.26);
     }
-    .tab.active .tIco{
+    .navBtn.active .nIco{
       background: rgba(255,255,255,.18);
       color:#fff;
       box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
     }
 
-    .frameWrap{
-      position:absolute;
-      inset: 0;
-      padding: 92px 0 0 0; /* espaço das tabs */
-    }
-    iframe{
-      width:100%;
-      height:100%;
-      border:0;
-      background:#fff;
-    }
-
+    /* Loader */
     .loader{
       position:absolute;
       inset:0;
@@ -272,22 +293,24 @@
       background: rgba(255,255,255,.55);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      z-index: 20;
+      z-index: 90;
     }
     .loader.on{ display:flex; }
+
     .loaderBox{
       display:flex;
       align-items:center;
       gap: 12px;
       padding: 14px 16px;
       border-radius: 18px;
-      background: rgba(255,255,255,.88);
+      background: rgba(255,255,255,.90);
       border: 1px solid rgba(39,71,217,.14);
       box-shadow: 0 18px 55px rgba(39,71,217,.18);
       color: #1e2b4a;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: .02em;
     }
+
     .spinner{
       width: 18px; height: 18px;
       border-radius: 50%;
@@ -297,23 +320,23 @@
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
 
-    /* Bottom sheet menu */
+    /* Bottom sheet menu (3 pontinhos) */
     .sheetBg{
       position: fixed;
       inset:0;
-      background: rgba(8, 14, 28, .35);
+      background: rgba(8, 14, 28, .40);
       display:none;
       align-items:flex-end;
       justify-content:center;
       padding: 18px 12px calc(12px + var(--safeB));
-      z-index: 50;
+      z-index: 200;
     }
     .sheetBg.on{ display:flex; }
 
     .sheet{
-      width: min(560px, 100%);
+      width: min(720px, 100%);
       border-radius: 26px;
-      background: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.94);
       border: 1px solid rgba(39,71,217,.14);
       box-shadow: 0 30px 90px rgba(39,71,217,.22);
       overflow:hidden;
@@ -327,6 +350,7 @@
       justify-content:space-between;
       padding: 14px 16px 10px;
       gap: 10px;
+      border-bottom: 1px solid rgba(39,71,217,.10);
     }
     .sheetHead .ttl{
       font-weight: 900;
@@ -354,7 +378,7 @@
       flex: 0 0 auto;
     }
 
-    .sheetBody{ padding: 6px 10px 12px; }
+    .sheetBody{ padding: 10px 10px 12px; }
 
     .sheetBtn{
       width:100%;
@@ -365,7 +389,7 @@
       padding: 12px 12px;
       border-radius: 18px;
       border: 1px solid rgba(39,71,217,.12);
-      background: rgba(255,255,255,.75);
+      background: rgba(255,255,255,.82);
       box-shadow: 0 14px 40px rgba(39,71,217,.08);
       cursor:pointer;
       user-select:none;
@@ -420,10 +444,11 @@
       flex: 0 0 auto;
     }
 
+    /* Toast */
     .toast{
       position: fixed;
       left: 50%;
-      bottom: calc(14px + var(--safeB));
+      bottom: calc(84px + var(--safeB));
       transform: translateX(-50%);
       background: rgba(255,255,255,.92);
       border: 1px solid rgba(39,71,217,.14);
@@ -433,13 +458,13 @@
       display:none;
       align-items:center;
       gap: 10px;
-      z-index: 80;
-      max-width: min(560px, calc(100% - 24px));
+      z-index: 250;
+      max-width: min(720px, calc(100% - 24px));
     }
     .toast.on{ display:flex; }
     .toast i{ color: var(--royal); }
     .toast span{
-      font-weight: 800;
+      font-weight: 900;
       color: #1b2746;
       font-size: .90rem;
       white-space: nowrap;
@@ -447,13 +472,162 @@
       text-overflow: ellipsis;
     }
 
+    /* Login overlay */
+    .auth{
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding: calc(18px + var(--safeT)) 14px calc(18px + var(--safeB));
+      background:
+        radial-gradient(900px 520px at 18% 10%, rgba(255,255,255,.92) 0%, rgba(255,255,255,0) 60%),
+        linear-gradient(130deg, rgba(245,248,255,.98) 0%, rgba(215,230,255,.98) 100%);
+    }
+    .auth.on{ display:flex; }
+
+    .authCard{
+      width: min(520px, 100%);
+      border-radius: 28px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 26px 90px rgba(39,71,217,.22);
+      overflow:hidden;
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+    }
+
+    .authHead{
+      padding: 18px 18px 12px;
+      display:flex;
+      gap: 14px;
+      align-items:center;
+      border-bottom: 1px solid rgba(39,71,217,.10);
+    }
+
+    .authLogo{
+      width: 56px;
+      height: 56px;
+      border-radius: 20px;
+      background: rgba(39,71,217,.08);
+      border: 1px solid rgba(39,71,217,.12);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      flex: 0 0 auto;
+    }
+    .authLogo img{ width:82%; height:82%; object-fit:contain; }
+
+    .authTitle{ min-width:0; }
+    .authTitle h1{
+      margin:0;
+      font-family: Orbitron, sans-serif;
+      letter-spacing: 1.1px;
+      font-size: 1.08rem;
+      text-transform: uppercase;
+      color: #16264a;
+      line-height: 1.1;
+    }
+    .authTitle p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: .92rem;
+      line-height: 1.25;
+    }
+
+    .authBody{
+      padding: 14px 18px 18px;
+    }
+
+    .field{
+      margin: 10px 0;
+    }
+    .field label{
+      display:block;
+      font-size: .86rem;
+      font-weight: 900;
+      color: #1b2746;
+      letter-spacing: .02em;
+      margin: 0 0 6px;
+    }
+    .inp{
+      width:100%;
+      height: 52px;
+      border-radius: 16px;
+      border: 1px solid rgba(39,71,217,.16);
+      background: rgba(255,255,255,.92);
+      padding: 0 14px;
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 14px 40px rgba(39,71,217,.08);
+    }
+    .inp:focus{
+      border-color: rgba(39,71,217,.38);
+      box-shadow: 0 18px 55px rgba(39,71,217,.14);
+    }
+
+    .row2{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .check{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+      color: #1e2b4a;
+      font-weight: 800;
+      font-size: .88rem;
+      user-select:none;
+    }
+    .check input{ width:18px; height:18px; }
+
+    .btnPrimary{
+      width: 100%;
+      height: 52px;
+      border: 0;
+      border-radius: 18px;
+      cursor:pointer;
+      color:#fff;
+      font-weight: 900;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, rgba(39,71,217,.95), rgba(59,97,227,.92));
+      box-shadow: 0 20px 60px rgba(39,71,217,.26);
+      margin-top: 14px;
+    }
+    .btnPrimary:active{ transform: scale(.995); }
+
+    .authHint{
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.3;
+    }
+
+    .pill{
+      display:inline-flex;
+      gap: 8px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(25,178,107,.10);
+      border: 1px solid rgba(25,178,107,.20);
+      color: #116e42;
+      font-weight: 900;
+      font-size: .84rem;
+      margin-top: 10px;
+    }
+
     @media (max-width: 420px){
       .chip{ display:none; }
-      .label{ font-size: .84rem; }
-    }
-    @media (max-width: 380px){
-      .tab{ gap: 8px; }
-      .tIco{ width: 40px; height: 40px; }
+      .toast{ bottom: calc(78px + var(--safeB)); }
     }
   </style>
 </head>
@@ -462,6 +636,7 @@
   <div class="app">
     <div class="shell">
 
+      <!-- TOPBAR (sempre visível) -->
       <div class="topbar">
         <div class="brand">
           <div class="logo" aria-hidden="true">
@@ -469,14 +644,14 @@
           </div>
           <div class="brandTxt">
             <p class="t">Coopex</p>
-            <p class="s" id="subTitle">Hub · Inicializando…</p>
+            <p class="s" id="subTitle">Hub · Selecione um painel</p>
           </div>
         </div>
 
         <div class="topRight">
-          <div class="chip" aria-label="Sessão segura">
+          <div class="chip" aria-label="Sessão">
             <i class="bi bi-shield-lock-fill"></i>
-            Sessão segura
+            <span id="chipText">Sessão</span>
             <span class="dot" aria-hidden="true"></span>
           </div>
 
@@ -486,26 +661,17 @@
         </div>
       </div>
 
+      <!-- STAGE -->
       <div class="stage" role="application" aria-label="Coopex Hub">
-        <div class="tabsBar" role="tablist" aria-label="Painéis">
-          <button class="tab" type="button" data-key="supervisao" role="tab" aria-selected="false">
-            <span class="tIco"><i class="bi bi-headset"></i></span>
-            <span class="label">SUPER...</span>
-          </button>
-
-          <button class="tab" type="button" data-key="estab" role="tab" aria-selected="false">
-            <span class="tIco"><i class="bi bi-shop-window"></i></span>
-            <span class="label">ESTAB.</span>
-          </button>
-
-          <button class="tab" type="button" data-key="parceria" role="tab" aria-selected="false">
-            <span class="tIco"><i class="bi bi-people-fill"></i></span>
-            <span class="label">PARCE...</span>
-          </button>
-        </div>
-
         <div class="frameWrap">
-          <iframe id="appFrame" title="Coopex Hub Frame" referrerpolicy="no-referrer"></iframe>
+          <!-- IMPORTANTE: sandbox impede o painel de "tomar" o app por navegação automática.
+               Se algum painel quebrar por causa disso, me diga qual e eu ajusto o sandbox mínimo. -->
+          <iframe
+            id="appFrame"
+            title="Coopex Hub Frame"
+            referrerpolicy="no-referrer"
+            sandbox="allow-forms allow-scripts allow-modals allow-popups allow-downloads allow-popups-to-escape-sandbox allow-same-origin"
+          ></iframe>
         </div>
 
         <div class="loader" id="loader" aria-live="polite">
@@ -516,16 +682,34 @@
         </div>
       </div>
 
+      <!-- BOTTOM NAV (cara de app) -->
+      <div class="bottomNav" aria-label="Navegação">
+        <div class="navBar" role="tablist" aria-label="Painéis">
+          <button class="navBtn" type="button" data-key="supervisao" role="tab" aria-selected="false">
+            <span class="nIco"><i class="bi bi-headset"></i></span>
+            Supervisão
+          </button>
+          <button class="navBtn" type="button" data-key="estab" role="tab" aria-selected="false">
+            <span class="nIco"><i class="bi bi-shop-window"></i></span>
+            Estab.
+          </button>
+          <button class="navBtn" type="button" data-key="parceria" role="tab" aria-selected="false">
+            <span class="nIco"><i class="bi bi-people-fill"></i></span>
+            Parceria
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
-  <!-- Menu 3 pontinhos -->
+  <!-- MENU 3 PONTINHOS (sempre disponível) -->
   <div class="sheetBg" id="sheetBg" aria-hidden="true">
     <div class="sheet" role="dialog" aria-modal="true" aria-label="Menu do Hub">
       <div class="sheetHead">
         <div>
           <p class="ttl">Menu</p>
-          <p class="sub">Ações rápidas</p>
+          <p class="sub" id="sheetSub">Ações rápidas</p>
         </div>
         <button class="sheetClose" id="btnCloseSheet" type="button" aria-label="Fechar menu">
           <i class="bi bi-x-lg"></i>
@@ -566,28 +750,27 @@
           <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
         </button>
 
-        <button class="sheetBtn" type="button" data-act="torch">
+        <button class="sheetBtn" type="button" data-act="reload">
           <div class="sbLeft">
-            <div class="sbIco"><i class="bi bi-flashlight"></i></div>
+            <div class="sbIco"><i class="bi bi-arrow-clockwise"></i></div>
             <div class="sbTxt">
-              <p class="a" id="torchTitle">Lanterna</p>
-              <p class="b" id="torchDesc">Ligar / desligar (quando suportado)</p>
+              <p class="a">Recarregar painel</p>
+              <p class="b">Atualiza a tela atual</p>
             </div>
           </div>
-          <div class="sbGo"><i class="bi bi-toggle2-off" id="torchIcon"></i></div>
+          <div class="sbGo"><i class="bi bi-arrow-repeat"></i></div>
         </button>
 
-        <button class="sheetBtn" type="button" data-act="mode">
+        <button class="sheetBtn" type="button" data-act="openExternal">
           <div class="sbLeft">
-            <div class="sbIco"><i class="bi bi-shield-lock"></i></div>
+            <div class="sbIco"><i class="bi bi-box-arrow-up-right"></i></div>
             <div class="sbTxt">
-              <p class="a" id="modeTitle">Modo de abertura</p>
-              <p class="b" id="modeDesc">Direto (recomendado p/ manter login)</p>
+              <p class="a">Abrir no navegador</p>
+              <p class="b">Abre o painel atual fora do Hub</p>
             </div>
           </div>
-          <div class="sbGo"><i class="bi bi-toggle2-on" id="modeIcon"></i></div>
+          <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
         </button>
-
 
         <button class="sheetBtn" type="button" data-act="copy">
           <div class="sbLeft">
@@ -600,75 +783,167 @@
           <div class="sbGo"><i class="bi bi-clipboard"></i></div>
         </button>
 
-        <button class="sheetBtn" type="button" data-act="maps">
+        <button class="sheetBtn" type="button" data-act="changeLogin">
           <div class="sbLeft">
-            <div class="sbIco"><i class="bi bi-geo-alt-fill"></i></div>
+            <div class="sbIco"><i class="bi bi-person-gear"></i></div>
             <div class="sbTxt">
-              <p class="a">Abrir Google Maps</p>
-              <p class="b">Abre o Maps no celular</p>
+              <p class="a">Trocar login</p>
+              <p class="b">Atualiza usuário e senha do Hub</p>
             </div>
           </div>
           <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
+        </button>
+
+        <button class="sheetBtn" type="button" data-act="logout">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-box-arrow-left"></i></div>
+            <div class="sbTxt">
+              <p class="a">Sair do Hub</p>
+              <p class="b">Limpa a sessão salva neste dispositivo</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-x-circle"></i></div>
         </button>
       </div>
     </div>
   </div>
 
+  <!-- LOGIN OVERLAY -->
+  <div class="auth" id="auth" aria-hidden="true">
+    <div class="authCard" role="dialog" aria-modal="true" aria-label="Login do Coopex Hub">
+      <div class="authHead">
+        <div class="authLogo" aria-hidden="true">
+          <img src="kratos-logo.png" alt="" />
+        </div>
+        <div class="authTitle">
+          <h1>Coopex Hub</h1>
+          <p>Entre uma vez e navegue entre os painéis com troca rápida.</p>
+          <div class="pill"><i class="bi bi-shield-check"></i> Ambiente protegido</div>
+        </div>
+      </div>
+
+      <div class="authBody">
+        <div class="field">
+          <label for="u">Usuário</label>
+          <input class="inp" id="u" autocomplete="username" inputmode="text" placeholder="Digite seu usuário" />
+        </div>
+
+        <div class="field">
+          <label for="p">Senha</label>
+          <input class="inp" id="p" type="password" autocomplete="current-password" placeholder="Digite sua senha" />
+        </div>
+
+        <div class="row2">
+          <label class="check" title="Se marcado, o Hub guarda a sessão neste dispositivo">
+            <input type="checkbox" id="remember" />
+            Lembrar neste dispositivo
+          </label>
+
+          <label class="check" title="Tenta entrar automaticamente em cada painel (recomendado)">
+            <input type="checkbox" id="autoLogin" checked />
+            Auto-login nos painéis
+          </label>
+        </div>
+
+        <button class="btnPrimary" id="btnEnter" type="button">
+          Entrar no Hub
+        </button>
+
+        <p class="authHint">
+          Se algum painel não aceitar o auto-login, me diga qual é e eu ajusto os campos do formulário exatamente para ele.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
   <div class="toast" id="toast" role="status" aria-live="polite">
     <i class="bi bi-info-circle"></i>
     <span id="toastMsg">Ok</span>
   </div>
 
+  <!-- Hidden form para auto-login por POST -->
+  <form id="loginForm" method="POST" style="display:none;" target="appFrame">
+    <input type="text" name="username" id="fUser">
+    <input type="password" name="password" id="fPass">
+  </form>
+
 <script>
 (() => {
-  // Troque este BUILD a cada atualização (isso força o app a buscar o SW novo)
-  const BUILD = "2025-12-18-04";
+  // Troque este BUILD a cada atualização (força atualização do service-worker)
+  const BUILD = "2025-12-19-01";
 
-  const MODE_KEY = "hub_mode"; // "direct" (recomendado) ou "iframe"
-  let openMode = localStorage.getItem(MODE_KEY) || "direct";
-
-  // Forçar Hub (não redireciona) quando abrir com ?hub=1
-  const params = new URLSearchParams(location.search);
-  const forceHub = params.get("hub") === "1";
-
-  let currentKey = null;
-  let currentUrl = "";
-
-  const APPS = {
-    supervisao: "https://escalas-2-1.onrender.com/",
-    estab:      "https://financas-dxsu.onrender.com/",
-    parceria:   "https://kratossystem.onrender.com/login"
+  // Chaves de sessão
+  const STORE = {
+    user: "hub_user",
+    pass: "hub_pass",
+    remember: "hub_remember",
+    auto: "hub_autologin",
+    last: "hub_last"
   };
 
-  const MAPS_QUERY = "Coopex";
+  // CONFIG dos painéis
+  // Se algum painel tiver campos diferentes, ajuste:
+  //   loginUserField, loginPassField, loginUrl
+  const APPS = {
+    supervisao: {
+      label: "Supervisão",
+      homeUrl: "https://escalas-2-1.onrender.com/",
+      loginUrl: "https://escalas-2-1.onrender.com/login",
+      loginUserField: "username",
+      loginPassField: "password"
+    },
+    estab: {
+      label: "Estabelecimentos",
+      homeUrl: "https://financas-dxsu.onrender.com/",
+      loginUrl: "https://financas-dxsu.onrender.com/login",
+      loginUserField: "username",
+      loginPassField: "password"
+    },
+    parceria: {
+      label: "Parceria",
+      homeUrl: "https://kratossystem.onrender.com/",
+      loginUrl: "https://kratossystem.onrender.com/login",
+      loginUserField: "username",
+      loginPassField: "password"
+    }
+  };
 
+  // Elementos
   const frame = document.getElementById("appFrame");
   const loader = document.getElementById("loader");
   const loaderText = document.getElementById("loaderText");
-  const tabs = [...document.querySelectorAll(".tab")];
   const subTitle = document.getElementById("subTitle");
+  const chipText = document.getElementById("chipText");
+
+  const navBtns = [...document.querySelectorAll(".navBtn")];
 
   const sheetBg = document.getElementById("sheetBg");
   const btnMenu = document.getElementById("btnMenu");
   const btnCloseSheet = document.getElementById("btnCloseSheet");
+  const sheetSub = document.getElementById("sheetSub");
 
   const toast = document.getElementById("toast");
   const toastMsg = document.getElementById("toastMsg");
 
-  const torchTitle = document.getElementById("torchTitle");
-  const modeTitle  = document.getElementById("modeTitle");
-  const modeDesc   = document.getElementById("modeDesc");
-  const modeIcon   = document.getElementById("modeIcon");
-  const torchDesc  = document.getElementById("torchDesc");
-  const torchIcon  = document.getElementById("torchIcon");
+  const auth = document.getElementById("auth");
+  const u = document.getElementById("u");
+  const p = document.getElementById("p");
+  const remember = document.getElementById("remember");
+  const autoLogin = document.getElementById("autoLogin");
+  const btnEnter = document.getElementById("btnEnter");
 
+  const loginForm = document.getElementById("loginForm");
+  const fUser = document.getElementById("fUser");
+  const fPass = document.getElementById("fPass");
+
+  // Estado
+  let currentKey = null;
+  let currentUrl = "";
+
+  // Utilidades
   function haptic(ms=10){
     try{ navigator.vibrate && navigator.vibrate(ms); }catch{}
-  }
-
-  function labelFor(key){
-    return key === "supervisao" ? "Supervisão"
-      : (key === "estab" ? "Estabelecimentos" : "Parceria");
   }
 
   function showLoader(text){
@@ -686,65 +961,42 @@
   }
 
   function setActive(key){
-    tabs.forEach(t => {
-      const active = t.dataset.key === key;
-      t.classList.toggle("active", active);
-      t.setAttribute("aria-selected", active ? "true" : "false");
+    navBtns.forEach(b => {
+      const on = b.dataset.key === key;
+      b.classList.toggle("active", on);
+      b.setAttribute("aria-selected", on ? "true" : "false");
     });
-    subTitle.textContent = labelFor(key) + " · Em execução";
-    localStorage.setItem("hub_last", key);
-  }
-
-  function openApp(key, opts = { silent:false }){
-    const url = APPS[key];
-    if (!url) return;
-
     currentKey = key;
-    currentUrl = url;
-
-    setActive(key);
-
-    // Modo direto: abre sem iframe (login funciona melhor, pois o painel vira 1ª parte)
-    if (openMode === "direct" && !forceHub){
-      if (!opts.silent) showLoader("Abrindo " + labelFor(key) + "…");
-      // pequeno timeout p/ garantir que o loader aparece antes do redirect
-      setTimeout(() => { window.location.href = url; }, 80);
-      return;
-    }
-
-    // Modo iframe: mantém o Hub visível, mas pode sofrer com cookies 3ª parte em alguns navegadores
-    if (!opts.silent) showLoader("Abrindo " + labelFor(key) + "…");
-    frame.src = url;
-
-    const watchdog = setTimeout(() => {
-      hideLoader();
-      showToast("Carregando…");
-    }, 1800);
-
-    frame.onload = () => {
-      clearTimeout(watchdog);
-      hideLoader();
-    };
+    const a = APPS[key];
+    subTitle.textContent = a ? (a.label + " · Em execução") : "Hub · Selecione um painel";
+    localStorage.setItem(STORE.last, key);
   }
 
-
-  function bindTab(el){
-    el.addEventListener("click", () => {
-      haptic(12);
-      openApp(el.dataset.key);
-    });
-    el.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        haptic(12);
-        openApp(el.dataset.key);
-      }
-    });
+  function storageGet(k){
+    // preferir sessão (sessionStorage) e cair para localStorage se lembrar
+    return sessionStorage.getItem(k) ?? localStorage.getItem(k);
   }
-  tabs.forEach(bindTab);
+  function storageSet(k, v, persist){
+    if (persist) localStorage.setItem(k, v);
+    else sessionStorage.setItem(k, v);
+  }
+  function storageClearAll(){
+    [STORE.user, STORE.pass].forEach(k => {
+      try{ sessionStorage.removeItem(k); }catch{}
+      try{ localStorage.removeItem(k); }catch{}
+    });
+    try{ localStorage.removeItem(STORE.last); }catch{}
+    try{ localStorage.removeItem(STORE.remember); }catch{}
+    try{ localStorage.removeItem(STORE.auto); }catch{}
+  }
+
+  function hasSession(){
+    return !!storageGet(STORE.user) && !!storageGet(STORE.pass);
+  }
 
   function openSheet(){
     haptic(10);
+    sheetSub.textContent = currentKey ? (APPS[currentKey].label + " · Opções") : "Ações rápidas";
     sheetBg.classList.add("on");
     sheetBg.setAttribute("aria-hidden", "false");
   }
@@ -752,10 +1004,89 @@
     sheetBg.classList.remove("on");
     sheetBg.setAttribute("aria-hidden", "true");
   }
+
   btnMenu.addEventListener("click", openSheet);
   btnCloseSheet.addEventListener("click", closeSheet);
   sheetBg.addEventListener("click", (e) => { if (e.target === sheetBg) closeSheet(); });
 
+  // Auto-login por POST no iframe
+  // Importante: isso depende do painel aceitar POST /login com os campos configurados.
+  function postLoginToFrame(key){
+    const a = APPS[key];
+    const user = storageGet(STORE.user);
+    const pass = storageGet(STORE.pass);
+
+    if (!a || !user || !pass) return false;
+
+    // Configura nomes dos campos conforme o painel
+    loginForm.action = a.loginUrl;
+    // Atualiza names dinamicamente (para compatibilidade com painéis diferentes)
+    fUser.name = a.loginUserField || "username";
+    fPass.name = a.loginPassField || "password";
+
+    fUser.value = user;
+    fPass.value = pass;
+
+    // Pequeno truque: inicia com about:blank para evitar “sobras”
+    frame.src = "about:blank";
+
+    // Submete o form para dentro do iframe (cross-origin permitido como navegação)
+    setTimeout(() => {
+      try{ loginForm.submit(); }catch{}
+    }, 60);
+
+    return true;
+  }
+
+  function openApp(key, opts = { silent:false }){
+    const a = APPS[key];
+    if (!a) return;
+
+    setActive(key);
+    currentUrl = a.homeUrl;
+
+    if (!opts.silent) showLoader("Abrindo " + a.label + "…");
+
+    const wantAuto = (localStorage.getItem(STORE.auto) === "1");
+
+    // tenta auto-login primeiro; se não tiver sessão ou auto desativado, abre home direto
+    let didPost = false;
+    if (wantAuto && hasSession()){
+      didPost = postLoginToFrame(key);
+    }
+
+    if (!didPost){
+      frame.src = a.homeUrl;
+    }
+
+    // Watchdog de carregamento
+    const watchdog = setTimeout(() => {
+      hideLoader();
+      showToast("Carregando…");
+    }, 1600);
+
+    frame.onload = () => {
+      clearTimeout(watchdog);
+      hideLoader();
+
+      // Tenta atualizar currentUrl ao menos com home (não dá para ler URL real por cross-origin)
+      currentUrl = a.homeUrl;
+    };
+  }
+
+  // Nav buttons
+  navBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      haptic(12);
+      if (!hasSession()){
+        showAuth();
+        return;
+      }
+      openApp(btn.dataset.key);
+    });
+  });
+
+  // Ações do menu
   sheetBg.querySelectorAll("[data-act]").forEach(btn => {
     btn.addEventListener("click", async () => {
       const act = btn.dataset.act;
@@ -764,7 +1095,27 @@
       if (act === "switch") {
         closeSheet();
         haptic(12);
+        if (!hasSession()){
+          showAuth();
+          return;
+        }
         openApp(key);
+        return;
+      }
+
+      if (act === "reload") {
+        closeSheet();
+        haptic(8);
+        showToast("Recarregando…");
+        try{ frame.src = frame.src; }catch{ /* ignore */ }
+        return;
+      }
+
+      if (act === "openExternal") {
+        closeSheet();
+        haptic(10);
+        const url = (currentKey && APPS[currentKey]) ? APPS[currentKey].homeUrl : currentUrl;
+        try{ window.open(url, "_blank", "noopener,noreferrer"); }catch{}
         return;
       }
 
@@ -772,7 +1123,8 @@
         closeSheet();
         haptic(8);
         try{
-          await navigator.clipboard.writeText(currentUrl || frame.src || "");
+          const url = (currentKey && APPS[currentKey]) ? APPS[currentKey].homeUrl : currentUrl;
+          await navigator.clipboard.writeText(url || "");
           showToast("Link copiado.");
         }catch{
           showToast("Não foi possível copiar.");
@@ -780,175 +1132,136 @@
         return;
       }
 
-      
-      if (act === "mode") {
-        // alterna entre direct e iframe
-        openMode = (openMode === "direct") ? "iframe" : "direct";
-        localStorage.setItem(MODE_KEY, openMode);
-        updateModeUI();
-        showToast(openMode === "direct" ? "Modo direto ativado." : "Modo iframe ativado.");
+      if (act === "changeLogin") {
+        closeSheet();
+        haptic(10);
+        showAuth(true);
         return;
       }
 
-if (act === "maps") {
+      if (act === "logout") {
         closeSheet();
         haptic(12);
-        const geoUrl = "geo:0,0?q=" + encodeURIComponent(MAPS_QUERY);
-        const webUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(MAPS_QUERY);
-        try{ window.location.href = geoUrl; }catch{}
-        setTimeout(() => { window.open(webUrl, "_blank", "noopener,noreferrer"); }, 350);
-        return;
-      }
-
-      if (act === "torch") {
-        closeSheet();
-        haptic(12);
-        await toggleTorch();
+        storageClearAll();
+        frame.src = "about:blank";
+        setActive(null);
+        chipText.textContent = "Sessão";
+        subTitle.textContent = "Hub · Selecione um painel";
+        showToast("Sessão removida.");
+        showAuth();
         return;
       }
     });
   });
 
-  // Torch
-  let torchOn = false;
-  let torchStream = null;
-  let torchTrack = null;
+  // Login UI
+  function showAuth(prefill=false){
+    auth.classList.add("on");
+    auth.setAttribute("aria-hidden", "false");
 
-  function updateTorchUI(){
-    if (torchOn) {
-      torchTitle.textContent = "Lanterna ligada";
-      torchDesc.textContent = "Toque para desligar";
-      torchIcon.className = "bi bi-toggle2-on";
+    // Carregar preferências
+    const rem = (localStorage.getItem(STORE.remember) === "1");
+    const aut = (localStorage.getItem(STORE.auto) !== "0"); // default 1
+    remember.checked = rem;
+    autoLogin.checked = aut;
+
+    if (prefill && hasSession()){
+      u.value = storageGet(STORE.user) || "";
+      p.value = storageGet(STORE.pass) || "";
     } else {
-      torchTitle.textContent = "Lanterna";
-      torchDesc.textContent = "Ligar / desligar (quando suportado)";
-      torchIcon.className = "bi bi-toggle2-off";
+      // se já tem user salvo, preenche user e foca senha
+      const lastUser = storageGet(STORE.user) || "";
+      u.value = lastUser;
+      p.value = "";
     }
-  }
 
-  async function toggleTorch(){
-    if (torchOn){
+    setTimeout(() => {
       try{
-        if (torchTrack) torchTrack.stop();
-        if (torchStream) torchStream.getTracks().forEach(t => t.stop());
+        if (u.value) p.focus();
+        else u.focus();
       }catch{}
-      torchOn = false;
-      torchTrack = null;
-      torchStream = null;
-      updateTorchUI();
-
-
-  function updateModeUI(){
-    const direct = (openMode === "direct");
-    modeTitle.textContent = "Modo de abertura";
-    modeDesc.textContent = direct
-      ? "Direto (recomendado p/ manter login)"
-      : "Iframe (mantém o Hub visível)";
-    modeIcon.className = direct ? "bi bi-toggle2-on" : "bi bi-toggle2-off";
+    }, 60);
   }
 
-  updateModeUI();
+  function hideAuth(){
+    auth.classList.remove("on");
+    auth.setAttribute("aria-hidden", "true");
+  }
 
-      showToast("Lanterna desligada.");
+  btnEnter.addEventListener("click", () => {
+    const user = (u.value || "").trim();
+    const pass = (p.value || "").trim();
+
+    if (!user || !pass){
+      showToast("Preencha usuário e senha.");
       return;
     }
 
-    try{
-      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
-        showToast("Lanterna não suportada.");
-        return;
-      }
+    const persist = remember.checked;
+    localStorage.setItem(STORE.remember, persist ? "1" : "0");
+    localStorage.setItem(STORE.auto, autoLogin.checked ? "1" : "0");
 
-      torchStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: "environment" } },
-        audio: false
-      });
+    // Salva em sessionStorage por padrão (mais seguro), e em localStorage se “lembrar”
+    storageSet(STORE.user, user, persist);
+    storageSet(STORE.pass, pass, persist);
 
-      torchTrack = torchStream.getVideoTracks()[0];
-      const caps = torchTrack.getCapabilities ? torchTrack.getCapabilities() : {};
-      if (!caps.torch){
-        torchStream.getTracks().forEach(t => t.stop());
-        torchStream = null; torchTrack = null;
-        showToast("Lanterna não suportada.");
-        return;
-      }
+    chipText.textContent = "Logado";
+    hideAuth();
+    showToast("Bem-vindo.");
 
-      await torchTrack.applyConstraints({ advanced: [{ torch: true }] });
-      torchOn = true;
-      updateTorchUI();
+    // Abre painel inicial
+    const last = localStorage.getItem(STORE.last);
+    const startKey = (last && APPS[last]) ? last : "supervisao";
+    openApp(startKey, { silent:false });
+  });
 
-
-  function updateModeUI(){
-    const direct = (openMode === "direct");
-    modeTitle.textContent = "Modo de abertura";
-    modeDesc.textContent = direct
-      ? "Direto (recomendado p/ manter login)"
-      : "Iframe (mantém o Hub visível)";
-    modeIcon.className = direct ? "bi bi-toggle2-on" : "bi bi-toggle2-off";
-  }
-
-  updateModeUI();
-
-      showToast("Lanterna ligada.");
-    }catch{
-      try{ if (torchStream) torchStream.getTracks().forEach(t => t.stop()); }catch{}
-      torchStream = null; torchTrack = null;
-      showToast("Não foi possível ligar a lanterna.");
+  // Enter no teclado
+  [u, p].forEach(el => el.addEventListener("keydown", (e) => {
+    if (e.key === "Enter"){
+      e.preventDefault();
+      btnEnter.click();
     }
-  }
-
-  updateTorchUI();
-
-
-  function updateModeUI(){
-    const direct = (openMode === "direct");
-    modeTitle.textContent = "Modo de abertura";
-    modeDesc.textContent = direct
-      ? "Direto (recomendado p/ manter login)"
-      : "Iframe (mantém o Hub visível)";
-    modeIcon.className = direct ? "bi bi-toggle2-on" : "bi bi-toggle2-off";
-  }
-
-  updateModeUI();
-
+  }));
 
   // Boot
-  const last = localStorage.getItem("hub_last");
-  const startKey = (last && APPS[last]) ? last : "supervisao";
-  setActive(startKey);
-  showLoader("Iniciando…");
-  currentKey = startKey;
-  currentUrl = APPS[startKey] || "";
-  if (forceHub) {
-    hideLoader();
-  } else {
-    openApp(startKey, { silent:true });
-  }
+  (function boot(){
+    // status sessão
+    chipText.textContent = hasSession() ? "Logado" : "Sessão";
 
-  // Service Worker: registra com querystring + updateViaCache para evitar “não muda”
+    // Definir painel inicial
+    const last = localStorage.getItem(STORE.last);
+    const startKey = (last && APPS[last]) ? last : "supervisao";
+    setActive(startKey);
+
+    // Se não tem sessão, mostra login
+    if (!hasSession()){
+      frame.src = "about:blank";
+      showAuth();
+      return;
+    }
+
+    // Abre direto com auto-login (se habilitado)
+    showLoader("Iniciando…");
+    openApp(startKey, { silent:true });
+  })();
+
+  // Service Worker: evita “não atualiza”
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./service-worker.js?v=" + encodeURIComponent(BUILD), { updateViaCache: "none" })
       .then((reg) => {
-        // pede checagem de update sem ficar recarregando sozinho
         try{ reg.update && reg.update(); }catch{}
-
-        // se houver SW novo esperando, ativa
         if (reg.waiting) {
           try{ reg.waiting.postMessage({ type: "SKIP_WAITING" }); }catch{}
         }
-
         reg.addEventListener("updatefound", () => {
           const nw = reg.installing;
           if (!nw) return;
           nw.addEventListener("statechange", () => {
             if (nw.state === "installed" && navigator.serviceWorker.controller) {
-              // aplica atualização somente quando existir update real
               try{ reg.waiting && reg.waiting.postMessage({ type: "SKIP_WAITING" }); }catch{}
             }
           });
         });
-
-        // recarrega só quando controlador muda (ou seja, update real aplicado)
         navigator.serviceWorker.addEventListener("controllerchange", () => {
           location.reload();
         });
