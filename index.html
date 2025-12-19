@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8" />
-  <title>Kratos System · Hub</title>
+  <title>Coopex Hub</title>
 
   <!-- Mobile / PWA -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -468,7 +468,7 @@
             <img src="kratos-logo.png" alt="" />
           </div>
           <div class="brandTxt">
-            <p class="t">Kratos System</p>
+            <p class="t">Coopex</p>
             <p class="s" id="subTitle">Hub · Inicializando…</p>
           </div>
         </div>
@@ -486,7 +486,7 @@
         </div>
       </div>
 
-      <div class="stage" role="application" aria-label="Kratos Hub">
+      <div class="stage" role="application" aria-label="Coopex Hub">
         <div class="tabsBar" role="tablist" aria-label="Painéis">
           <button class="tab" type="button" data-key="supervisao" role="tab" aria-selected="false">
             <span class="tIco"><i class="bi bi-headset"></i></span>
@@ -505,7 +505,7 @@
         </div>
 
         <div class="frameWrap">
-          <iframe id="appFrame" title="Kratos Hub Frame" referrerpolicy="no-referrer"></iframe>
+          <iframe id="appFrame" title="Coopex Hub Frame" referrerpolicy="no-referrer"></iframe>
         </div>
 
         <div class="loader" id="loader" aria-live="polite">
@@ -577,6 +577,18 @@
           <div class="sbGo"><i class="bi bi-toggle2-off" id="torchIcon"></i></div>
         </button>
 
+        <button class="sheetBtn" type="button" data-act="mode">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-shield-lock"></i></div>
+            <div class="sbTxt">
+              <p class="a" id="modeTitle">Modo de abertura</p>
+              <p class="b" id="modeDesc">Direto (recomendado p/ manter login)</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-toggle2-on" id="modeIcon"></i></div>
+        </button>
+
+
         <button class="sheetBtn" type="button" data-act="copy">
           <div class="sbLeft">
             <div class="sbIco"><i class="bi bi-link-45deg"></i></div>
@@ -612,6 +624,16 @@
   // Troque este BUILD a cada atualização (isso força o app a buscar o SW novo)
   const BUILD = "2025-12-18-04";
 
+  const MODE_KEY = "hub_mode"; // "direct" (recomendado) ou "iframe"
+  let openMode = localStorage.getItem(MODE_KEY) || "direct";
+
+  // Forçar Hub (não redireciona) quando abrir com ?hub=1
+  const params = new URLSearchParams(location.search);
+  const forceHub = params.get("hub") === "1";
+
+  let currentKey = null;
+  let currentUrl = "";
+
   const APPS = {
     supervisao: "https://escalas-2-1.onrender.com/",
     estab:      "https://financas-dxsu.onrender.com/",
@@ -634,6 +656,9 @@
   const toastMsg = document.getElementById("toastMsg");
 
   const torchTitle = document.getElementById("torchTitle");
+  const modeTitle  = document.getElementById("modeTitle");
+  const modeDesc   = document.getElementById("modeDesc");
+  const modeIcon   = document.getElementById("modeIcon");
   const torchDesc  = document.getElementById("torchDesc");
   const torchIcon  = document.getElementById("torchIcon");
 
@@ -673,7 +698,21 @@
   function openApp(key, opts = { silent:false }){
     const url = APPS[key];
     if (!url) return;
+
+    currentKey = key;
+    currentUrl = url;
+
     setActive(key);
+
+    // Modo direto: abre sem iframe (login funciona melhor, pois o painel vira 1ª parte)
+    if (openMode === "direct" && !forceHub){
+      if (!opts.silent) showLoader("Abrindo " + labelFor(key) + "…");
+      // pequeno timeout p/ garantir que o loader aparece antes do redirect
+      setTimeout(() => { window.location.href = url; }, 80);
+      return;
+    }
+
+    // Modo iframe: mantém o Hub visível, mas pode sofrer com cookies 3ª parte em alguns navegadores
     if (!opts.silent) showLoader("Abrindo " + labelFor(key) + "…");
     frame.src = url;
 
@@ -687,6 +726,7 @@
       hideLoader();
     };
   }
+
 
   function bindTab(el){
     el.addEventListener("click", () => {
@@ -732,7 +772,7 @@
         closeSheet();
         haptic(8);
         try{
-          await navigator.clipboard.writeText(frame.src || "");
+          await navigator.clipboard.writeText(currentUrl || frame.src || "");
           showToast("Link copiado.");
         }catch{
           showToast("Não foi possível copiar.");
@@ -740,7 +780,17 @@
         return;
       }
 
-      if (act === "maps") {
+      
+      if (act === "mode") {
+        // alterna entre direct e iframe
+        openMode = (openMode === "direct") ? "iframe" : "direct";
+        localStorage.setItem(MODE_KEY, openMode);
+        updateModeUI();
+        showToast(openMode === "direct" ? "Modo direto ativado." : "Modo iframe ativado.");
+        return;
+      }
+
+if (act === "maps") {
         closeSheet();
         haptic(12);
         const geoUrl = "geo:0,0?q=" + encodeURIComponent(MAPS_QUERY);
@@ -786,6 +836,19 @@
       torchTrack = null;
       torchStream = null;
       updateTorchUI();
+
+
+  function updateModeUI(){
+    const direct = (openMode === "direct");
+    modeTitle.textContent = "Modo de abertura";
+    modeDesc.textContent = direct
+      ? "Direto (recomendado p/ manter login)"
+      : "Iframe (mantém o Hub visível)";
+    modeIcon.className = direct ? "bi bi-toggle2-on" : "bi bi-toggle2-off";
+  }
+
+  updateModeUI();
+
       showToast("Lanterna desligada.");
       return;
     }
@@ -813,6 +876,19 @@
       await torchTrack.applyConstraints({ advanced: [{ torch: true }] });
       torchOn = true;
       updateTorchUI();
+
+
+  function updateModeUI(){
+    const direct = (openMode === "direct");
+    modeTitle.textContent = "Modo de abertura";
+    modeDesc.textContent = direct
+      ? "Direto (recomendado p/ manter login)"
+      : "Iframe (mantém o Hub visível)";
+    modeIcon.className = direct ? "bi bi-toggle2-on" : "bi bi-toggle2-off";
+  }
+
+  updateModeUI();
+
       showToast("Lanterna ligada.");
     }catch{
       try{ if (torchStream) torchStream.getTracks().forEach(t => t.stop()); }catch{}
@@ -823,12 +899,31 @@
 
   updateTorchUI();
 
+
+  function updateModeUI(){
+    const direct = (openMode === "direct");
+    modeTitle.textContent = "Modo de abertura";
+    modeDesc.textContent = direct
+      ? "Direto (recomendado p/ manter login)"
+      : "Iframe (mantém o Hub visível)";
+    modeIcon.className = direct ? "bi bi-toggle2-on" : "bi bi-toggle2-off";
+  }
+
+  updateModeUI();
+
+
   // Boot
   const last = localStorage.getItem("hub_last");
   const startKey = (last && APPS[last]) ? last : "supervisao";
   setActive(startKey);
   showLoader("Iniciando…");
-  openApp(startKey, { silent:true });
+  currentKey = startKey;
+  currentUrl = APPS[startKey] || "";
+  if (forceHub) {
+    hideLoader();
+  } else {
+    openApp(startKey, { silent:true });
+  }
 
   // Service Worker: registra com querystring + updateViaCache para evitar “não muda”
   if ("serviceWorker" in navigator) {

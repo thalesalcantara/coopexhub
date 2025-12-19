@@ -1,4 +1,4 @@
-# Kratos System Hub (PWA + APK nativo via Bubblewrap)
+# Coopex Hub (PWA + APK nativo via Bubblewrap)
 
 Este Hub abre os painéis **sem iframe** (abre direto), então **login volta a funcionar**.
 
@@ -34,3 +34,13 @@ bubblewrap fingerprint
 
 Crie no repo a pasta `/.well-known/` e coloque lá `assetlinks.json`:
 `/.well-known/assetlinks.json`
+
+
+## Login: manter sessão e “entrar direto”
+- Este Hub tem **dois modos**:
+  - **Direto (recomendado)**: ao escolher um painel, ele abre **sem iframe**, o que melhora bastante a manutenção do login (cookies 1ª parte).
+  - **Iframe**: mantém o Hub visível por cima, porém pode falhar em alguns navegadores por bloqueio de cookies de 3ª parte.
+- Para **abrir o Hub e escolher o painel** (sem redirecionar automaticamente), use:
+  - `index.html?hub=1`
+- No Android, você pode usar o atalho do app (pressionar e segurar o ícone) **“Escolher painel”**.
+

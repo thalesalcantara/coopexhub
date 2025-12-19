@@ -1,14 +1,15 @@
-const CACHE = "kratos-hub-v10"; // aumente: v11, v12...
+const CACHE = "coopex-hub-v1"; // aumente: v11, v12...
 
 const ASSETS = [
   "./",
   "./index.html",
-  "./script.js",
+  "./manifest.webmanifest",
+  "./service-worker.js",
+  "./reset.js",
   "./kratos-logo.png",
   "./icon-192.png",
   "./icon-512.png",
   "./icon-512-maskable.png",
-  "./manifest.webmanifest",
   "./offline.html"
 ];
 

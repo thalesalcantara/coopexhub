@@ -1,6 +1,6 @@
 {
-  "name": "Kratos System Hub",
-  "short_name": "KratosHub",
+  "name": "Coopex Hub",
+  "short_name": "CoopexHub",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
@@ -24,6 +24,21 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Escolher painel",
+      "short_name": "Escolher",
+      "description": "Abrir o Hub para escolher o painel",
+      "url": "./?hub=1",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
     }
   ]
 }
