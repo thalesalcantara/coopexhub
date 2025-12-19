@@ -60,7 +60,6 @@
       touch-action: manipulation;
     }
 
-    /* App container full-screen real */
     .app{
       height:100dvh;
       width:100%;
@@ -79,7 +78,7 @@
       position:relative;
     }
 
-    /* Topbar sempre fixa (nativa) */
+    /* Topbar sempre fixa */
     .topbar{
       position:sticky;
       top: 0;
@@ -199,13 +198,11 @@
       min-height: 0;
     }
 
-    /* Conteúdo: iframe ocupa tudo, com “borda” interna discreta */
     .frameWrap{
       position:absolute;
       inset: 0;
       padding: 0;
     }
-
     iframe{
       width:100%;
       height:100%;
@@ -213,7 +210,110 @@
       background:#fff;
     }
 
-    /* Bottom nav estilo app */
+    /* Seletor de painel (tela inicial dentro do stage) */
+    .chooser{
+      position:absolute;
+      inset: 0;
+      z-index: 85;
+      display:none;
+      padding: 18px;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(180deg, rgba(255,255,255,.30), rgba(255,255,255,.10));
+      backdrop-filter: blur(12px) saturate(140%);
+      -webkit-backdrop-filter: blur(12px) saturate(140%);
+    }
+    .chooser.on{ display:flex; }
+
+    .chooseCard{
+      width: min(560px, 100%);
+      border-radius: 28px;
+      background: rgba(255,255,255,.90);
+      border: 1px solid rgba(39,71,217,.14);
+      box-shadow: 0 26px 90px rgba(39,71,217,.20);
+      overflow:hidden;
+    }
+    .chooseHead{
+      padding: 16px 16px 12px;
+      border-bottom: 1px solid rgba(39,71,217,.10);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .chooseHead h2{
+      margin:0;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: .95rem;
+      color:#1b2746;
+    }
+    .chooseHead p{
+      margin:6px 0 0;
+      color: var(--muted);
+      font-size: .90rem;
+      line-height: 1.25;
+    }
+
+    .chooseBody{ padding: 12px 14px 14px; }
+
+    .chooseBtn{
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(39,71,217,.12);
+      background: rgba(255,255,255,.90);
+      box-shadow: 0 14px 40px rgba(39,71,217,.08);
+      cursor:pointer;
+      user-select:none;
+      margin: 10px 0;
+    }
+    .chooseBtn:active{ transform: scale(.995); }
+
+    .cbLeft{ display:flex; align-items:center; gap: 12px; min-width:0; }
+    .cbIco{
+      width: 46px; height: 46px;
+      border-radius: 16px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(39,71,217,.10);
+      color: var(--royal);
+      flex: 0 0 auto;
+    }
+    .cbTxt{ min-width:0; }
+    .cbTxt .a{
+      margin:0;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-size: .92rem;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      color: #1b2746;
+    }
+    .cbTxt .b{
+      margin:4px 0 0;
+      color: var(--muted);
+      font-size: .86rem;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+    }
+    .cbGo{
+      width: 42px; height: 42px;
+      border-radius: 16px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(39,71,217,.07);
+      color: var(--royal);
+      flex: 0 0 auto;
+    }
+
+    /* Bottom nav */
     .bottomNav{
       position:sticky;
       bottom: 0;
@@ -251,7 +351,7 @@
       color: #1b2746;
       transition: transform .12s ease, background .12s ease, box-shadow .12s ease, color .12s ease;
       min-width:0;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: .03em;
       text-transform: uppercase;
       font-size: .86rem;
@@ -320,7 +420,7 @@
     }
     @keyframes spin{ to{ transform: rotate(360deg); } }
 
-    /* Bottom sheet menu (3 pontinhos) */
+    /* Sheet menu */
     .sheetBg{
       position: fixed;
       inset:0;
@@ -537,13 +637,9 @@
       line-height: 1.25;
     }
 
-    .authBody{
-      padding: 14px 18px 18px;
-    }
+    .authBody{ padding: 14px 18px 18px; }
 
-    .field{
-      margin: 10px 0;
-    }
+    .field{ margin: 10px 0; }
     .field label{
       display:block;
       font-size: .86rem;
@@ -582,7 +678,7 @@
       align-items:center;
       gap: 10px;
       color: #1e2b4a;
-      font-weight: 800;
+      font-weight: 900;
       font-size: .88rem;
       user-select:none;
     }
@@ -636,7 +732,7 @@
   <div class="app">
     <div class="shell">
 
-      <!-- TOPBAR (sempre visível) -->
+      <!-- TOPBAR -->
       <div class="topbar">
         <div class="brand">
           <div class="logo" aria-hidden="true">
@@ -644,7 +740,7 @@
           </div>
           <div class="brandTxt">
             <p class="t">Coopex</p>
-            <p class="s" id="subTitle">Hub · Selecione um painel</p>
+            <p class="s" id="subTitle">Hub · Escolha um painel</p>
           </div>
         </div>
 
@@ -663,17 +759,66 @@
 
       <!-- STAGE -->
       <div class="stage" role="application" aria-label="Coopex Hub">
+
         <div class="frameWrap">
-          <!-- IMPORTANTE: sandbox impede o painel de "tomar" o app por navegação automática.
-               Se algum painel quebrar por causa disso, me diga qual e eu ajusto o sandbox mínimo. -->
           <iframe
             id="appFrame"
             title="Coopex Hub Frame"
             referrerpolicy="no-referrer"
             sandbox="allow-forms allow-scripts allow-modals allow-popups allow-downloads allow-popups-to-escape-sandbox allow-same-origin"
+            src="about:blank"
           ></iframe>
         </div>
 
+        <!-- TELA DE ESCOLHA (sempre que iniciar) -->
+        <div class="chooser" id="chooser" aria-hidden="true">
+          <div class="chooseCard">
+            <div class="chooseHead">
+              <div>
+                <h2>Escolher painel</h2>
+                <p>Selecione onde deseja entrar agora.</p>
+              </div>
+              <div class="sbIco" title="Troca rápida"><i class="bi bi-grid-1x2-fill"></i></div>
+            </div>
+
+            <div class="chooseBody">
+              <button class="chooseBtn" type="button" data-open="supervisao">
+                <div class="cbLeft">
+                  <div class="cbIco"><i class="bi bi-headset"></i></div>
+                  <div class="cbTxt">
+                    <p class="a">Supervisão</p>
+                    <p class="b">Escalas e controle operacional</p>
+                  </div>
+                </div>
+                <div class="cbGo"><i class="bi bi-arrow-right-short"></i></div>
+              </button>
+
+              <button class="chooseBtn" type="button" data-open="estab">
+                <div class="cbLeft">
+                  <div class="cbIco"><i class="bi bi-shop-window"></i></div>
+                  <div class="cbTxt">
+                    <p class="a">Estabelecimentos</p>
+                    <p class="b">Financeiro e relatórios</p>
+                  </div>
+                </div>
+                <div class="cbGo"><i class="bi bi-arrow-right-short"></i></div>
+              </button>
+
+              <button class="chooseBtn" type="button" data-open="parceria">
+                <div class="cbLeft">
+                  <div class="cbIco"><i class="bi bi-people-fill"></i></div>
+                  <div class="cbTxt">
+                    <p class="a">Parceria</p>
+                    <p class="b">Portal de integração</p>
+                  </div>
+                </div>
+                <div class="cbGo"><i class="bi bi-arrow-right-short"></i></div>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- LOADER -->
         <div class="loader" id="loader" aria-live="polite">
           <div class="loaderBox">
             <span class="spinner" aria-hidden="true"></span>
@@ -682,7 +827,7 @@
         </div>
       </div>
 
-      <!-- BOTTOM NAV (cara de app) -->
+      <!-- BOTTOM NAV -->
       <div class="bottomNav" aria-label="Navegação">
         <div class="navBar" role="tablist" aria-label="Painéis">
           <button class="navBtn" type="button" data-key="supervisao" role="tab" aria-selected="false">
@@ -703,7 +848,7 @@
     </div>
   </div>
 
-  <!-- MENU 3 PONTINHOS (sempre disponível) -->
+  <!-- MENU 3 PONTINHOS -->
   <div class="sheetBg" id="sheetBg" aria-hidden="true">
     <div class="sheet" role="dialog" aria-modal="true" aria-label="Menu do Hub">
       <div class="sheetHead">
@@ -717,6 +862,17 @@
       </div>
 
       <div class="sheetBody">
+        <button class="sheetBtn" type="button" data-act="choosePanel">
+          <div class="sbLeft">
+            <div class="sbIco"><i class="bi bi-grid-1x2-fill"></i></div>
+            <div class="sbTxt">
+              <p class="a">Escolher painel</p>
+              <p class="b">Volta para a tela de seleção</p>
+            </div>
+          </div>
+          <div class="sbGo"><i class="bi bi-arrow-right-short"></i></div>
+        </button>
+
         <button class="sheetBtn" type="button" data-act="switch" data-key="supervisao">
           <div class="sbLeft">
             <div class="sbIco"><i class="bi bi-headset"></i></div>
@@ -817,7 +973,7 @@
         </div>
         <div class="authTitle">
           <h1>Coopex Hub</h1>
-          <p>Entre uma vez e navegue entre os painéis com troca rápida.</p>
+          <p>Entre uma vez e escolha o painel sempre que abrir o Hub.</p>
           <div class="pill"><i class="bi bi-shield-check"></i> Ambiente protegido</div>
         </div>
       </div>
@@ -850,7 +1006,7 @@
         </button>
 
         <p class="authHint">
-          Se algum painel não aceitar o auto-login, me diga qual é e eu ajusto os campos do formulário exatamente para ele.
+          Importante: o Hub não abre painel sozinho. Você sempre escolhe ao entrar.
         </p>
       </div>
     </div>
@@ -870,21 +1026,16 @@
 
 <script>
 (() => {
-  // Troque este BUILD a cada atualização (força atualização do service-worker)
-  const BUILD = "2025-12-19-01";
+  const BUILD = "2025-12-19-02";
 
-  // Chaves de sessão
   const STORE = {
     user: "hub_user",
     pass: "hub_pass",
     remember: "hub_remember",
-    auto: "hub_autologin",
-    last: "hub_last"
+    auto: "hub_autologin"
   };
 
-  // CONFIG dos painéis
-  // Se algum painel tiver campos diferentes, ajuste:
-  //   loginUserField, loginPassField, loginUrl
+  // Ajuste aqui se os endpoints/campos do login forem diferentes
   const APPS = {
     supervisao: {
       label: "Supervisão",
@@ -909,12 +1060,14 @@
     }
   };
 
-  // Elementos
   const frame = document.getElementById("appFrame");
   const loader = document.getElementById("loader");
   const loaderText = document.getElementById("loaderText");
   const subTitle = document.getElementById("subTitle");
   const chipText = document.getElementById("chipText");
+
+  const chooser = document.getElementById("chooser");
+  const chooseBtns = [...document.querySelectorAll("[data-open]")];
 
   const navBtns = [...document.querySelectorAll(".navBtn")];
 
@@ -937,11 +1090,9 @@
   const fUser = document.getElementById("fUser");
   const fPass = document.getElementById("fPass");
 
-  // Estado
   let currentKey = null;
   let currentUrl = "";
 
-  // Utilidades
   function haptic(ms=10){
     try{ navigator.vibrate && navigator.vibrate(ms); }catch{}
   }
@@ -961,19 +1112,24 @@
   }
 
   function setActive(key){
+    currentKey = key || null;
+
     navBtns.forEach(b => {
-      const on = b.dataset.key === key;
-      b.classList.toggle("active", on);
+      const on = key && b.dataset.key === key;
+      b.classList.toggle("active", !!on);
       b.setAttribute("aria-selected", on ? "true" : "false");
     });
-    currentKey = key;
-    const a = APPS[key];
-    subTitle.textContent = a ? (a.label + " · Em execução") : "Hub · Selecione um painel";
-    localStorage.setItem(STORE.last, key);
+
+    if (!key){
+      subTitle.textContent = "Hub · Escolha um painel";
+      currentUrl = "";
+      return;
+    }
+
+    subTitle.textContent = APPS[key].label + " · Em execução";
   }
 
   function storageGet(k){
-    // preferir sessão (sessionStorage) e cair para localStorage se lembrar
     return sessionStorage.getItem(k) ?? localStorage.getItem(k);
   }
   function storageSet(k, v, persist){
@@ -985,13 +1141,24 @@
       try{ sessionStorage.removeItem(k); }catch{}
       try{ localStorage.removeItem(k); }catch{}
     });
-    try{ localStorage.removeItem(STORE.last); }catch{}
     try{ localStorage.removeItem(STORE.remember); }catch{}
     try{ localStorage.removeItem(STORE.auto); }catch{}
   }
 
   function hasSession(){
     return !!storageGet(STORE.user) && !!storageGet(STORE.pass);
+  }
+
+  function showChooser(){
+    chooser.classList.add("on");
+    chooser.setAttribute("aria-hidden", "false");
+    setActive(null);
+    frame.src = "about:blank";
+  }
+
+  function hideChooser(){
+    chooser.classList.remove("on");
+    chooser.setAttribute("aria-hidden", "true");
   }
 
   function openSheet(){
@@ -1010,31 +1177,20 @@
   sheetBg.addEventListener("click", (e) => { if (e.target === sheetBg) closeSheet(); });
 
   // Auto-login por POST no iframe
-  // Importante: isso depende do painel aceitar POST /login com os campos configurados.
   function postLoginToFrame(key){
     const a = APPS[key];
     const user = storageGet(STORE.user);
     const pass = storageGet(STORE.pass);
-
     if (!a || !user || !pass) return false;
 
-    // Configura nomes dos campos conforme o painel
     loginForm.action = a.loginUrl;
-    // Atualiza names dinamicamente (para compatibilidade com painéis diferentes)
     fUser.name = a.loginUserField || "username";
     fPass.name = a.loginPassField || "password";
-
     fUser.value = user;
     fPass.value = pass;
 
-    // Pequeno truque: inicia com about:blank para evitar “sobras”
     frame.src = "about:blank";
-
-    // Submete o form para dentro do iframe (cross-origin permitido como navegação)
-    setTimeout(() => {
-      try{ loginForm.submit(); }catch{}
-    }, 60);
-
+    setTimeout(() => { try{ loginForm.submit(); }catch{} }, 60);
     return true;
   }
 
@@ -1042,24 +1198,22 @@
     const a = APPS[key];
     if (!a) return;
 
+    hideChooser();
     setActive(key);
     currentUrl = a.homeUrl;
 
     if (!opts.silent) showLoader("Abrindo " + a.label + "…");
 
-    const wantAuto = (localStorage.getItem(STORE.auto) === "1");
-
-    // tenta auto-login primeiro; se não tiver sessão ou auto desativado, abre home direto
+    const wantAuto = (localStorage.getItem(STORE.auto) !== "0");
     let didPost = false;
+
     if (wantAuto && hasSession()){
       didPost = postLoginToFrame(key);
     }
-
     if (!didPost){
       frame.src = a.homeUrl;
     }
 
-    // Watchdog de carregamento
     const watchdog = setTimeout(() => {
       hideLoader();
       showToast("Carregando…");
@@ -1068,13 +1222,23 @@
     frame.onload = () => {
       clearTimeout(watchdog);
       hideLoader();
-
-      // Tenta atualizar currentUrl ao menos com home (não dá para ler URL real por cross-origin)
       currentUrl = a.homeUrl;
     };
   }
 
-  // Nav buttons
+  // Clique na tela de escolha
+  chooseBtns.forEach(btn => {
+    btn.addEventListener("click", () => {
+      haptic(12);
+      if (!hasSession()){
+        showAuth();
+        return;
+      }
+      openApp(btn.dataset.open);
+    });
+  });
+
+  // Bottom nav: se estiver na tela de escolha, abre igual
   navBtns.forEach(btn => {
     btn.addEventListener("click", () => {
       haptic(12);
@@ -1092,6 +1256,13 @@
       const act = btn.dataset.act;
       const key = btn.dataset.key;
 
+      if (act === "choosePanel"){
+        closeSheet();
+        haptic(10);
+        showChooser();
+        return;
+      }
+
       if (act === "switch") {
         closeSheet();
         haptic(12);
@@ -1107,14 +1278,15 @@
         closeSheet();
         haptic(8);
         showToast("Recarregando…");
-        try{ frame.src = frame.src; }catch{ /* ignore */ }
+        try{ frame.src = frame.src; }catch{}
         return;
       }
 
       if (act === "openExternal") {
         closeSheet();
         haptic(10);
-        const url = (currentKey && APPS[currentKey]) ? APPS[currentKey].homeUrl : currentUrl;
+        const url = currentKey ? APPS[currentKey].homeUrl : currentUrl;
+        if (!url){ showToast("Nenhum painel aberto."); return; }
         try{ window.open(url, "_blank", "noopener,noreferrer"); }catch{}
         return;
       }
@@ -1122,8 +1294,9 @@
       if (act === "copy") {
         closeSheet();
         haptic(8);
+        const url = currentKey ? APPS[currentKey].homeUrl : currentUrl;
+        if (!url){ showToast("Nenhum painel aberto."); return; }
         try{
-          const url = (currentKey && APPS[currentKey]) ? APPS[currentKey].homeUrl : currentUrl;
           await navigator.clipboard.writeText(url || "");
           showToast("Link copiado.");
         }catch{
@@ -1143,10 +1316,7 @@
         closeSheet();
         haptic(12);
         storageClearAll();
-        frame.src = "about:blank";
-        setActive(null);
         chipText.textContent = "Sessão";
-        subTitle.textContent = "Hub · Selecione um painel";
         showToast("Sessão removida.");
         showAuth();
         return;
@@ -1159,9 +1329,8 @@
     auth.classList.add("on");
     auth.setAttribute("aria-hidden", "false");
 
-    // Carregar preferências
     const rem = (localStorage.getItem(STORE.remember) === "1");
-    const aut = (localStorage.getItem(STORE.auto) !== "0"); // default 1
+    const aut = (localStorage.getItem(STORE.auto) !== "0");
     remember.checked = rem;
     autoLogin.checked = aut;
 
@@ -1169,9 +1338,7 @@
       u.value = storageGet(STORE.user) || "";
       p.value = storageGet(STORE.pass) || "";
     } else {
-      // se já tem user salvo, preenche user e foca senha
-      const lastUser = storageGet(STORE.user) || "";
-      u.value = lastUser;
+      u.value = storageGet(STORE.user) || "";
       p.value = "";
     }
 
@@ -1201,21 +1368,17 @@
     localStorage.setItem(STORE.remember, persist ? "1" : "0");
     localStorage.setItem(STORE.auto, autoLogin.checked ? "1" : "0");
 
-    // Salva em sessionStorage por padrão (mais seguro), e em localStorage se “lembrar”
     storageSet(STORE.user, user, persist);
     storageSet(STORE.pass, pass, persist);
 
     chipText.textContent = "Logado";
     hideAuth();
-    showToast("Bem-vindo.");
+    showToast("Login OK. Escolha um painel.");
 
-    // Abre painel inicial
-    const last = localStorage.getItem(STORE.last);
-    const startKey = (last && APPS[last]) ? last : "supervisao";
-    openApp(startKey, { silent:false });
+    // REGRA: nunca abre painel automaticamente.
+    showChooser();
   });
 
-  // Enter no teclado
   [u, p].forEach(el => el.addEventListener("keydown", (e) => {
     if (e.key === "Enter"){
       e.preventDefault();
@@ -1223,29 +1386,22 @@
     }
   }));
 
-  // Boot
+  // Boot: se tem sessão -> mostra escolha; se não tem -> login
   (function boot(){
-    // status sessão
     chipText.textContent = hasSession() ? "Logado" : "Sessão";
 
-    // Definir painel inicial
-    const last = localStorage.getItem(STORE.last);
-    const startKey = (last && APPS[last]) ? last : "supervisao";
-    setActive(startKey);
-
-    // Se não tem sessão, mostra login
     if (!hasSession()){
+      setActive(null);
       frame.src = "about:blank";
       showAuth();
       return;
     }
 
-    // Abre direto com auto-login (se habilitado)
-    showLoader("Iniciando…");
-    openApp(startKey, { silent:true });
+    // REGRA: nunca abre painel sozinho
+    showChooser();
   })();
 
-  // Service Worker: evita “não atualiza”
+  // Service Worker (mantém)
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./service-worker.js?v=" + encodeURIComponent(BUILD), { updateViaCache: "none" })
       .then((reg) => {
